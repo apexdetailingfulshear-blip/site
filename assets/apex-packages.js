@@ -260,11 +260,11 @@
       '<p class="card-disclaimer">' +
       esc(DISCLAIMER) +
       "</p>" +
-      '<a class="btn-reserve ' +
+      '<button type="button" class="btn-reserve ' +
       pkg.btnStyle +
-      '" href="' +
-      BOOKING_URL +
-      '" target="_blank" rel="noopener">Reservar</a>' +
+      '" data-book="' +
+      esc(pkg.name) +
+      '">Reservar</button>' +
       "</div>"
     );
   }
@@ -389,6 +389,16 @@
 
     var wrap = sec.querySelector("#apex-pkgs");
     wrap.addEventListener("click", function (e) {
+      var bookBtn = e.target.closest("[data-book]");
+      if (bookBtn) {
+        if (bookBtn.classList.contains("btn-disabled")) return;
+        if (typeof window.__apexOpenBooking === "function") {
+          window.__apexOpenBooking(bookBtn.getAttribute("data-book"));
+        } else {
+          window.open("https://calendar.app.google/2VnG1xwYJw5LwXKXA", "_blank");
+        }
+        return;
+      }
       var editBtn = e.target.closest(".edit-btn");
       if (editBtn) {
         toggleEdit(editBtn.closest(".pkg-card").getAttribute("data-pkg"));

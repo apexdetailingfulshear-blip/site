@@ -10,6 +10,20 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- Netlify Forms detection form (hidden). Enables form + file uploads. -->
+    <form name="booking" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="text" name="nombre" />
+      <input type="tel" name="telefono" />
+      <input type="email" name="correo" />
+      <input type="text" name="vehiculo" />
+      <input type="text" name="paquete" />
+      <textarea name="notas"></textarea>
+      <input type="file" name="car_photos" multiple />
+      <input name="bot-field" />
+    </form>
+
     <script defer src="/assets/apex-packages.js"></script>
+    <script defer src="/assets/apex-enhance.js"></script>
   </body>
 </html>

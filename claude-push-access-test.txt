@@ -1,0 +1,2 @@
+This file confirms push access was successfully configured for claude-2 fine-grained PAT.
+Safe to delete at any time.

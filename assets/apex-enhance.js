@@ -115,6 +115,34 @@
     ".apex-hours strong{color:#fff;}",
     ".apex-quote-msg{margin-top:10px;font-size:13px;}",
     "@media (max-width:600px){#apex-modal{padding:20px;}#apex-gallery{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}.apex-lb-hint{display:none;}}",
+  
+    /* trust badges strip */
+    ".apex-trust{background:#0b1220;border-top:1px solid #1e2a3a;border-bottom:1px solid #1e2a3a;padding:22px 16px;}",
+    ".apex-trust-inner{max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:center;gap:28px;}",
+    ".apex-trust-item{display:flex;align-items:center;gap:10px;color:#c7cedd;font-size:14px;font-weight:600;}",
+    ".apex-trust-ic{font-size:18px;line-height:1;}",
+    /* how it works */
+    ".apex-hiw{background:#05070c;padding:80px 16px;}",
+    ".apex-hiw-inner{max-width:1100px;margin:0 auto;text-align:center;}",
+    ".apex-hiw-title{font-size:2rem;font-weight:800;color:#fff;margin-bottom:44px;}",
+    ".apex-hiw-title span{color:#2563eb;}",
+    ".apex-hiw-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px;text-align:left;}",
+    ".apex-hiw-step{background:#0e1626;border:1px solid #1e2a3a;border-radius:14px;padding:26px;}",
+    ".apex-hiw-num{width:40px;height:40px;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:16px;}",
+    ".apex-hiw-step h3{color:#fff;font-size:1.1rem;font-weight:700;margin-bottom:8px;}",
+    ".apex-hiw-step p{color:#9aa3b8;font-size:14px;line-height:1.5;margin:0;}",
+    /* service areas */
+    ".apex-areas{background:#0b0f1a;padding:80px 16px;}",
+    ".apex-areas-inner{max-width:1100px;margin:0 auto;text-align:center;}",
+    ".apex-areas-title{font-size:2rem;font-weight:800;color:#fff;margin-bottom:10px;}",
+    ".apex-areas-title span{color:#2563eb;}",
+    ".apex-areas-sub{color:#9aa3b8;margin-bottom:40px;}",
+    ".apex-areas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px;}",
+    ".apex-area-card{position:relative;height:160px;border-radius:14px;background-size:cover;background-position:center;overflow:hidden;border:1px solid #1e2a3a;transition:transform .2s ease;}",
+    ".apex-area-card:hover{transform:translateY(-4px);}",
+    ".apex-area-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,7,12,.15),rgba(5,7,12,.85));display:flex;align-items:flex-end;justify-content:center;padding-bottom:16px;}",
+    ".apex-area-overlay span{color:#fff;font-weight:700;font-size:16px;letter-spacing:.3px;}",
+    "@media (max-width:600px){.apex-trust-inner{gap:16px;}.apex-hiw-title,.apex-areas-title{font-size:1.6rem;}}",
   ].join("\n");
 
   function ensureStyle() {
@@ -607,12 +635,115 @@ var currentAddons = [];
   }
 
   /* ------------------------------------------------------------------ observers */
+  /* ------------------------------------------------- trust badges strip */
+  var TRUST_ITEMS = [
+    { ic: "\uD83D\uDE97", label: "Servicio m\u00f3vil a domicilio" },
+    { ic: "\u2705", label: "Resultados garantizados" },
+    { ic: "\uD83E\uDDF4", label: "Productos profesionales" },
+    { ic: "\uD83D\uDD52", label: "Puntualidad y confiabilidad" },
+  ];
+
+  function injectTrustBadges() {
+    var target = document.getElementById("servicios");
+    if (!target || document.getElementById("apex-trust")) return;
+    ensureStyle();
+    var wrap = document.createElement("div");
+    wrap.id = "apex-trust";
+    wrap.className = "apex-trust";
+    wrap.innerHTML =
+      '<div class="apex-trust-inner">' +
+      TRUST_ITEMS.map(function (t) {
+        return '<div class="apex-trust-item"><span class="apex-trust-ic">' + t.ic + '</span><span>' + t.label + '</span></div>';
+      }).join("") +
+      '</div>';
+    target.parentNode.insertBefore(wrap, target);
+  }
+
+  /* ------------------------------------------------- how it works */
+  var HIW_STEPS = [
+    { title: "Reserva tu Horario", text: "Elige tu paquete y selecciona la fecha y hora que m\u00e1s te convenga." },
+    { title: "Vamos a Tu Domicilio", text: "Llegamos con todo el equipo necesario, sin que tengas que moverte." },
+    { title: "Disfruta tu Auto", text: "Recibe tu veh\u00edculo limpio, brillante y como nuevo." },
+  ];
+
+  function injectHowItWorks() {
+    var target = document.getElementById("nosotros");
+    if (!target || document.getElementById("apex-hiw")) return;
+    ensureStyle();
+    var sec = document.createElement("section");
+    sec.id = "apex-hiw";
+    sec.className = "apex-hiw";
+    sec.innerHTML =
+      '<div class="apex-hiw-inner">' +
+      '<h2 class="apex-hiw-title">\u00bfC\u00f3mo <span>Funciona</span>?</h2>' +
+      '<div class="apex-hiw-steps">' +
+      HIW_STEPS.map(function (s, i) {
+        return '<div class="apex-hiw-step">' +
+          '<div class="apex-hiw-num">' + (i + 1) + '</div>' +
+          '<h3>' + s.title + '</h3>' +
+          '<p>' + s.text + '</p>' +
+          '</div>';
+      }).join("") +
+      '</div>' +
+      '</div>';
+    target.parentNode.insertBefore(sec, target);
+  }
+
+  /* ------------------------------------------------- service areas */
+  var CITIES = [
+  {
+    "name": "Houston",
+    "img": "https://images.unsplash.com/photo-1746311528667-1038fe0c8c46?q=80&w=800&auto=format&fit=crop"
+  },
+  {
+    "name": "Katy",
+    "img": "https://images.unsplash.com/photo-1770938474431-d1192cac9642?q=80&w=800&auto=format&fit=crop"
+  },
+  {
+    "name": "Fulshear",
+    "img": "https://images.unsplash.com/photo-1763680694053-6e86cd08053e?q=80&w=800&auto=format&fit=crop"
+  },
+  {
+    "name": "Richmond",
+    "img": "https://images.unsplash.com/photo-1758304481137-9eb706071871?q=80&w=800&auto=format&fit=crop"
+  },
+  {
+    "name": "Rosenberg",
+    "img": "https://images.unsplash.com/photo-1765601296884-eb4fabe7fc2e?q=80&w=800&auto=format&fit=crop"
+  }
+];
+
+  function injectServiceAreas() {
+    var target = document.getElementById("nosotros");
+    if (!target || document.getElementById("apex-areas")) return;
+    ensureStyle();
+    var sec = document.createElement("section");
+    sec.id = "apex-areas";
+    sec.className = "apex-areas";
+    sec.innerHTML =
+      '<div class="apex-areas-inner">' +
+      '<h2 class="apex-areas-title">Zonas que <span>Atendemos</span></h2>' +
+      '<p class="apex-areas-sub">Servicio m\u00f3vil de detallado en Houston y sus alrededores.</p>' +
+      '<div class="apex-areas-grid">' +
+      CITIES.map(function (c) {
+        return '<div class="apex-area-card" style="background-image:url(\'' + c.img + '\')">' +
+          '<div class="apex-area-overlay"><span>' + c.name + '</span></div>' +
+          '</div>';
+      }).join("") +
+      '</div>' +
+      '</div>';
+    target.parentNode.insertBefore(sec, target);
+  }
+
   function apply() {
     rewireHero();
     injectGallery();
     addPriceNote();
     enhanceFooter();
     wireQuote();
+    injectTrustBadges();
+    injectHowItWorks();
+    injectServiceAreas();
   }
 
   var obs = new MutationObserver(apply);

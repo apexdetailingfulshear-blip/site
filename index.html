@@ -11,7 +11,7 @@
   <body>
     <div id="root"></div>
 
-    <!-- Netlify Forms detection form (hidden). Enables form + file uploads. -->
+    <!-- Netlify Forms detection forms (hidden). Enable form handling + file uploads. -->
     <form name="booking" data-netlify="true" netlify-honeypot="bot-field" hidden>
       <input type="text" name="nombre" />
       <input type="tel" name="telefono" />
@@ -22,8 +22,17 @@
       <input type="file" name="car_photos" multiple />
       <input name="bot-field" />
     </form>
+    <form name="quote" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="text" name="nombre" />
+      <input type="tel" name="telefono" />
+      <input type="text" name="vehiculo" />
+      <input type="text" name="servicio" />
+      <input type="text" name="fecha" />
+      <textarea name="mensaje"></textarea>
+      <input name="bot-field" />
+    </form>
 
-    <script defer src="/assets/apex-packages.js"></script>
-    <script defer src="/assets/apex-enhance.js"></script>
+    <script defer src="/assets/apex-packages.js?v=2"></script>
+    <script defer src="/assets/apex-enhance.js?v=2"></script>
   </body>
 </html>

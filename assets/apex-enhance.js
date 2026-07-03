@@ -14,6 +14,23 @@
   var MAX_FILES = 8;
   var MAX_MB = 10;
 
+  // Hours of operation shown in the footer.
+  var HOURS = "7:00 AM – 8:00 PM";
+
+  // Social profile URLs — fill these in with the real profiles. "#" = not set yet.
+  var SOCIAL = {
+    facebook: "#",
+    instagram: "#",
+    tiktok: "#",
+  };
+
+  // Cities link to future per-city pages at /areas/<slug>.
+  var CITY_BASE = "/areas/";
+
+  var TIKTOK_SVG =
+    '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+    '<path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>';
+
   // Gallery media (files live in /assets/gallery/).
   var GALLERY = [
     { type: "video", src: "/assets/gallery/video-1.mp4", poster: "/assets/gallery/poster-1.jpg" },
@@ -73,7 +90,30 @@
     "#apex-pkgs .addon-card{transition:border-color .2s,transform .2s;}",
     "#apex-pkgs .addon-card:hover{border-color:#2e4568;transform:translateY(-2px);}",
     "#apex-pkgs .price-note{text-align:center;font-size:12px;color:#4a8ff5;background:rgba(74,143,245,.06);border:1px solid rgba(74,143,245,.15);border-radius:8px;padding:9px 12px;max-width:640px;margin:-32px auto 40px;}",
-    "@media (max-width:600px){#apex-modal{padding:20px;}#apex-gallery{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}}",
+    // gallery expand button (images)
+    "#apex-gallery .amg-item.amg-photo{cursor:zoom-in;}",
+    "#apex-gallery .amg-expand{position:absolute;top:8px;right:8px;background:rgba(10,17,32,.82);border:none;color:#fff;width:34px;height:34px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;z-index:2;transition:background .15s,transform .15s;}",
+    "#apex-gallery .amg-item:hover .amg-expand{background:#4a8ff5;}",
+    "#apex-gallery .amg-expand:hover{transform:scale(1.08);}",
+    // lightbox
+    "#apex-lightbox{position:fixed;inset:0;z-index:100000;background:rgba(3,6,15,.96);display:none;align-items:center;justify-content:center;overflow:hidden;touch-action:none;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}",
+    "#apex-lightbox.open{display:flex;}",
+    "#apex-lightbox img{max-width:96vw;max-height:90vh;object-fit:contain;transform-origin:center center;cursor:grab;user-select:none;-webkit-user-drag:none;will-change:transform;}",
+    "#apex-lightbox img.grabbing{cursor:grabbing;}",
+    "#apex-lb-close{position:fixed;top:16px;right:20px;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:26px;line-height:1;width:44px;height:44px;border-radius:50%;cursor:pointer;z-index:2;}",
+    "#apex-lb-close:hover{background:rgba(255,255,255,.24);}",
+    ".apex-lb-ctrls{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:2;}",
+    ".apex-lb-ctrls button{background:rgba(255,255,255,.13);border:none;color:#fff;width:46px;height:46px;border-radius:50%;font-size:22px;cursor:pointer;line-height:1;}",
+    ".apex-lb-ctrls button:hover{background:rgba(255,255,255,.26);}",
+    ".apex-lb-hint{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);color:#8a8fa8;font-size:12px;z-index:2;white-space:nowrap;}",
+    // footer city links + hours
+    ".apex-city-link{color:#4a8ff5 !important;text-decoration:none;transition:color .15s;}",
+    ".apex-city-link:hover{text-decoration:underline;color:#6fa8ff !important;}",
+    ".apex-city-sep{color:#4a5568;margin:0 2px;}",
+    ".apex-hours{color:#9aa3b8;font-size:13px;margin-top:6px;}",
+    ".apex-hours strong{color:#fff;}",
+    ".apex-quote-msg{margin-top:10px;font-size:13px;}",
+    "@media (max-width:600px){#apex-modal{padding:20px;}#apex-gallery{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}.apex-lb-hint{display:none;}}",
   ].join("\n");
 
   function ensureStyle() {
@@ -272,7 +312,9 @@
         );
       }
       return (
-        '<div class="amg-item"><img src="' + m.src + '" alt="Apex Detailing" loading="lazy" /></div>'
+        '<div class="amg-item amg-photo" data-full="' + m.src + '">' +
+        '<img src="' + m.src + '" alt="Apex Detailing" loading="lazy" />' +
+        '<button class="amg-expand" type="button" aria-label="Ver en pantalla completa" title="Pantalla completa">⛶</button></div>'
       );
     }).join("");
     sec.setAttribute("data-apex-gallery", "1");
@@ -290,6 +332,220 @@
         if (item) item.remove();
       }, true);
     });
+    // Open zoomable lightbox when a photo (or its expand button) is clicked.
+    sec.querySelectorAll("#apex-gallery .amg-photo").forEach(function (item) {
+      item.addEventListener("click", function () {
+        openLightbox(item.getAttribute("data-full"));
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------- image lightbox */
+  var lb, lbImg, lbScale = 1, lbX = 0, lbY = 0;
+
+  function applyTransform() {
+    lbImg.style.transform = "translate(" + lbX + "px," + lbY + "px) scale(" + lbScale + ")";
+  }
+  function setScale(s) {
+    lbScale = Math.max(1, Math.min(6, s));
+    if (lbScale === 1) { lbX = 0; lbY = 0; }
+    applyTransform();
+  }
+  function resetZoom() { lbScale = 1; lbX = 0; lbY = 0; if (lbImg) applyTransform(); }
+  function touchDist(e) {
+    var a = e.touches[0], b = e.touches[1];
+    return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+  }
+
+  function buildLightbox() {
+    if (document.getElementById("apex-lightbox")) return;
+    lb = document.createElement("div");
+    lb.id = "apex-lightbox";
+    lb.innerHTML =
+      '<button id="apex-lb-close" type="button" aria-label="Cerrar">&times;</button>' +
+      '<img alt="Apex Detailing" />' +
+      '<div class="apex-lb-hint">Rueda o +/− para acercar · arrastra para mover · doble clic para acercar</div>' +
+      '<div class="apex-lb-ctrls"><button type="button" data-z="out" aria-label="Alejar">−</button>' +
+      '<button type="button" data-z="reset" aria-label="Restablecer">⟲</button>' +
+      '<button type="button" data-z="in" aria-label="Acercar">+</button></div>';
+    document.body.appendChild(lb);
+    lbImg = lb.querySelector("img");
+
+    lb.querySelector("#apex-lb-close").addEventListener("click", closeLightbox);
+    lb.addEventListener("click", function (e) { if (e.target === lb) closeLightbox(); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && lb.classList.contains("open")) closeLightbox();
+    });
+    lb.querySelectorAll(".apex-lb-ctrls button").forEach(function (b) {
+      b.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var z = b.getAttribute("data-z");
+        if (z === "in") setScale(lbScale * 1.4);
+        else if (z === "out") setScale(lbScale / 1.4);
+        else resetZoom();
+      });
+    });
+    lb.addEventListener("wheel", function (e) {
+      e.preventDefault();
+      setScale(lbScale * (e.deltaY < 0 ? 1.12 : 0.89));
+    }, { passive: false });
+    lbImg.addEventListener("dblclick", function (e) {
+      e.preventDefault();
+      if (lbScale > 1) resetZoom(); else setScale(2.4);
+    });
+
+    // Mouse drag to pan when zoomed
+    var dragging = false, sx = 0, sy = 0;
+    lbImg.addEventListener("mousedown", function (e) {
+      if (lbScale <= 1) return;
+      dragging = true; sx = e.clientX - lbX; sy = e.clientY - lbY;
+      lbImg.classList.add("grabbing"); e.preventDefault();
+    });
+    window.addEventListener("mousemove", function (e) {
+      if (!dragging) return;
+      lbX = e.clientX - sx; lbY = e.clientY - sy; applyTransform();
+    });
+    window.addEventListener("mouseup", function () {
+      dragging = false; if (lbImg) lbImg.classList.remove("grabbing");
+    });
+
+    // Touch: pinch to zoom, drag to pan
+    var pinch = 0, startScale = 1, tsx = 0, tsy = 0, touchPan = false;
+    lbImg.addEventListener("touchstart", function (e) {
+      if (e.touches.length === 2) { pinch = touchDist(e); startScale = lbScale; }
+      else if (e.touches.length === 1 && lbScale > 1) {
+        touchPan = true; tsx = e.touches[0].clientX - lbX; tsy = e.touches[0].clientY - lbY;
+      }
+    }, { passive: false });
+    lbImg.addEventListener("touchmove", function (e) {
+      if (e.touches.length === 2 && pinch) { e.preventDefault(); setScale(startScale * (touchDist(e) / pinch)); }
+      else if (touchPan && e.touches.length === 1) {
+        e.preventDefault();
+        lbX = e.touches[0].clientX - tsx; lbY = e.touches[0].clientY - tsy; applyTransform();
+      }
+    }, { passive: false });
+    lbImg.addEventListener("touchend", function (e) { if (e.touches.length === 0) touchPan = false; });
+  }
+
+  function openLightbox(src) {
+    if (!src) return;
+    buildLightbox();
+    ensureStyle();
+    resetZoom();
+    lbImg.src = src;
+    lb.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+  function closeLightbox() {
+    if (!lb) return;
+    lb.classList.remove("open");
+    document.body.style.overflow = "";
+    resetZoom();
+  }
+
+  /* --------------------------------------------------- footer: cities, hours, social */
+  function slugify(s) {
+    return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  }
+
+  function enhanceFooter() {
+    var footer = document.querySelector("footer");
+    if (!footer || footer.getAttribute("data-apex-footer") === "1") return;
+    ensureStyle();
+
+    // Social icons (existing order in DOM: facebook, instagram, third).
+    var social = [].slice.call(footer.querySelectorAll('a[href="#"]'));
+    var order = ["facebook", "instagram", "tiktok"];
+    social.forEach(function (a, i) {
+      var key = order[i];
+      if (!key) return;
+      a.setAttribute("href", SOCIAL[key] || "#");
+      if (SOCIAL[key] && SOCIAL[key] !== "#") {
+        a.setAttribute("target", "_blank");
+        a.setAttribute("rel", "noopener");
+      }
+      a.setAttribute("aria-label", key);
+    });
+    // Ensure the third icon is TikTok.
+    if (social[2]) social[2].innerHTML = TIKTOK_SVG;
+
+    // Cities -> links to future /areas/<slug> pages.
+    var cityP = [].slice.call(footer.querySelectorAll("p")).find(function (p) {
+      return /Houston/.test(p.textContent) && /Katy/.test(p.textContent) && p.children.length === 0;
+    });
+    if (cityP) {
+      var cities = cityP.textContent.split("|").map(function (c) { return c.trim(); }).filter(Boolean);
+      cityP.innerHTML = cities.map(function (c) {
+        return '<a class="apex-city-link" href="' + CITY_BASE + slugify(c) + '">' + c + "</a>";
+      }).join('<span class="apex-city-sep">|</span>');
+
+      // Hours line, right under the cities.
+      if (!footer.querySelector(".apex-hours")) {
+        var h = document.createElement("p");
+        h.className = "apex-hours";
+        h.innerHTML = "Abierto todos los días · <strong>" + HOURS + "</strong>";
+        cityP.parentNode.insertBefore(h, cityP.nextSibling);
+      }
+    }
+
+    footer.setAttribute("data-apex-footer", "1");
+  }
+
+  /* ------------------------------------------------- quote form -> Netlify Forms */
+  function showQuoteMsg(form, text, kind) {
+    var m = form.querySelector(".apex-quote-msg");
+    if (!m) { m = document.createElement("p"); m.className = "apex-quote-msg"; form.appendChild(m); }
+    m.textContent = text;
+    m.style.color = kind === "err" ? "#e05c5c" : kind === "ok" ? "#4ac76e" : "#8a8fa8";
+  }
+
+  function wireQuote() {
+    var c = document.getElementById("contacto");
+    if (!c) return;
+    var form = c.querySelector("form");
+    if (!form || form.getAttribute("data-apex-quote") === "1") return;
+    form.setAttribute("data-apex-quote", "1");
+    // Capture phase so we intercept before the app's (non-working) handler.
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      var val = function (sel) { var el = form.querySelector(sel); return el ? el.value.trim() : ""; };
+      var nombre = val('input[placeholder="Nombre"]');
+      var tel = val('input[placeholder="Telefono"]');
+      var veh = val('input[placeholder="Tipo de vehiculo"]');
+      var serv = (function () { var s = form.querySelector("select"); return s ? s.value : ""; })();
+      var fecha = (function () { var d = form.querySelector('input[type="date"]'); return d ? d.value : ""; })();
+      var mensaje = val("textarea");
+      var btn = form.querySelector('button[type="submit"]') || form.querySelector("button");
+
+      if (!nombre || !tel) { showQuoteMsg(form, "Por favor ingresa tu nombre y teléfono.", "err"); return; }
+
+      var fd = new FormData();
+      fd.append("form-name", "quote");
+      fd.append("bot-field", "");
+      fd.append("nombre", nombre);
+      fd.append("telefono", tel);
+      fd.append("vehiculo", veh);
+      fd.append("servicio", serv);
+      fd.append("fecha", fecha);
+      fd.append("mensaje", mensaje);
+
+      var oldTxt = btn ? btn.textContent : "";
+      if (btn) { btn.disabled = true; btn.textContent = "Enviando..."; }
+      showQuoteMsg(form, "Enviando tu solicitud...", "");
+
+      fetch("/", { method: "POST", body: fd })
+        .then(function (r) {
+          if (!r.ok) throw new Error();
+          showQuoteMsg(form, "¡Gracias! Recibimos tu solicitud. Te contactaremos pronto.", "ok");
+          form.reset();
+        })
+        .catch(function () {
+          showQuoteMsg(form, "No pudimos enviar. Llámanos al 346-307-0407 o intenta de nuevo.", "err");
+        })
+        .then(function () { if (btn) { btn.disabled = false; btn.textContent = oldTxt; } });
+    }, true);
   }
 
   /* ------------------------------------------------------------- hero CTA + note */
@@ -320,6 +576,8 @@
     rewireHero();
     injectGallery();
     addPriceNote();
+    enhanceFooter();
+    wireQuote();
   }
 
   var obs = new MutationObserver(apply);

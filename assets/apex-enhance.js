@@ -54,7 +54,8 @@
     "#apex-modal .amx-pkg{display:inline-block;font-size:12px;font-weight:700;color:#4a8ff5;background:rgba(74,143,245,.1);border:1px solid rgba(74,143,245,.25);border-radius:20px;padding:4px 12px;margin-bottom:6px;}",
     "#apex-modal label{display:block;font-size:12px;color:#c0c8e0;margin:14px 0 5px;font-weight:600;}",
     "#apex-modal .amx-req{color:#4a8ff5;}",
-    "#apex-modal input[type=text],#apex-modal input[type=tel],#apex-modal input[type=email],#apex-modal textarea{width:100%;box-sizing:border-box;background:#0a1120;border:1px solid #22314a;border-radius:8px;padding:10px 12px;color:#fff;font-size:14px;font-family:inherit;transition:border-color .15s;}",
+    "#apex-modal input[type=text],#apex-modal input[type=tel],#apex-modal input[type=email],#apex-modal input[type=date],#apex-modal input[type=time],#apex-modal textarea{width:100%;box-sizing:border-box;background:#0a1120;border:1px solid #22314a;border-radius:8px;padding:10px 12px;color:#fff;font-size:14px;font-family:inherit;transition:border-color .15s;}",
+"#apex-modal .amx-addons{font-size:12px;color:#4a8ff5;background:rgba(74,143,245,.08);border:1px solid rgba(74,143,245,.2);border-radius:8px;padding:8px 10px;margin:-2px 0 4px;line-height:1.4;}",
     "#apex-modal input:focus,#apex-modal textarea:focus{outline:none;border-color:#4a8ff5;}",
     "#apex-modal textarea{resize:vertical;min-height:58px;}",
     "#apex-modal .amx-drop{border:1.5px dashed #2e3c54;border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;color:#8a8fa8;font-size:13px;line-height:1.5;}",
@@ -127,6 +128,7 @@
   /* ------------------------------------------------------------- booking modal */
   var files = []; // File[]
   var currentPkg = "";
+var currentAddons = [];
   var overlay, previews, msg, submitBtn;
 
   function buildModal() {
@@ -139,6 +141,7 @@
       "<h3>Reserva tu detallado</h3>" +
       '<p class="amx-sub">Sube fotos de tu vehículo y te enviaremos el <strong>precio final</strong> antes de tu cita.</p>' +
       '<span class="amx-pkg" id="amx-pkg"></span>' +
+'<p class="amx-addons" id="amx-addons" style="display:none;"></p>' +
       '<label>Nombre <span class="amx-req">*</span></label>' +
       '<input type="text" id="amx-nombre" autocomplete="name" />' +
       '<label>Teléfono <span class="amx-req">*</span></label>' +
@@ -147,6 +150,10 @@
       '<input type="email" id="amx-correo" autocomplete="email" />' +
       "<label>Vehículo (marca, modelo y año)</label>" +
       '<input type="text" id="amx-veh" placeholder="Ej. Nissan Rogue 2019" />' +
+      '<label>Fecha preferida <span class="amx-req">*</span></label>' +
+      '<input type="date" id="amx-fecha" />' +
+      '<label>Hora preferida <span class="amx-req">*</span></label>' +
+      '<input type="time" id="amx-hora" />' +
       '<label>Fotos del vehículo <span class="amx-req">*</span></label>' +
       '<div class="amx-drop" id="amx-drop"><strong>Toca para subir</strong> o arrastra tus fotos aquí<br>Interior, exterior y cualquier detalle (máx. ' +
       MAX_FILES +
@@ -230,17 +237,26 @@
     msg.className = "amx-msg" + (kind ? " " + kind : "");
   }
 
-  function openModal(pkgName) {
+  function openModal(pkgName, addons) {
     buildModal();
     ensureStyle();
     currentPkg = pkgName || "";
+    currentAddons = addons && addons.length ? addons : [];
     files = [];
     renderPreviews();
     setMsg("", "");
     overlay.querySelector("#amx-pkg").textContent = currentPkg || "Detallado";
-    ["#amx-nombre", "#amx-tel", "#amx-correo", "#amx-veh", "#amx-notas"].forEach(function (s) {
+    var addonsEl = overlay.querySelector("#amx-addons");
+    if (currentAddons.length) {
+      addonsEl.textContent = "Adicionales: " + currentAddons.join(", ");
+      addonsEl.style.display = "block";
+    } else {
+      addonsEl.style.display = "none";
+    }
+    ["#amx-nombre", "#amx-tel", "#amx-correo", "#amx-veh", "#amx-notas", "#amx-fecha", "#amx-hora"].forEach(function (s) {
       overlay.querySelector(s).value = "";
     });
+    overlay.querySelector("#amx-fecha").min = new Date().toISOString().slice(0, 10);
     submitBtn.disabled = false;
     submitBtn.textContent = "Enviar y reservar";
     overlay.classList.add("open");
@@ -257,8 +273,12 @@
   function submit() {
     var nombre = overlay.querySelector("#amx-nombre").value.trim();
     var tel = overlay.querySelector("#amx-tel").value.trim();
+  var fecha = overlay.querySelector("#amx-fecha").value;
+  var hora = overlay.querySelector("#amx-hora").value;
     if (!nombre) { setMsg("Por favor ingresa tu nombre.", "err"); return; }
     if (!tel) { setMsg("Por favor ingresa tu teléfono.", "err"); return; }
+  if (!fecha) { setMsg("Por favor elige una fecha.", "err"); return; }
+  if (!hora) { setMsg("Por favor elige una hora.", "err"); return; }
     if (!files.length) { setMsg("Sube al menos una foto de tu vehículo.", "err"); return; }
 
     var fd = new FormData();
@@ -269,6 +289,9 @@
     fd.append("correo", overlay.querySelector("#amx-correo").value.trim());
     fd.append("vehiculo", overlay.querySelector("#amx-veh").value.trim());
     fd.append("paquete", currentPkg);
+  fd.append("extras", currentAddons.join(", "));
+  fd.append("fecha", fecha);
+  fd.append("hora", hora);
     fd.append("notas", overlay.querySelector("#amx-notas").value.trim());
     files.forEach(function (f) { fd.append("car_photos", f, f.name); });
 

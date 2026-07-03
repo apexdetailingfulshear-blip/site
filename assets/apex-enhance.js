@@ -308,7 +308,7 @@
       if (m.type === "video") {
         return (
           '<div class="amg-item"><span class="amg-badge">Video</span>' +
-          '<video src="' + m.src + '" poster="' + m.poster + '" controls preload="none" playsinline muted></video></div>'
+          '<video src="' + m.src + '" poster="' + m.poster + '" controls preload="none" playsinline muted></video><button class="amg-expand amg-vid-full" type="button" aria-label="Pantalla completa" title="Pantalla completa">&#9974;</button></div>'
         );
       }
       return (
@@ -338,6 +338,18 @@
         openLightbox(item.getAttribute("data-full"));
       });
     });
+
+  // Fullscreen button for videos.
+  sec.querySelectorAll("#apex-gallery .amg-vid-full").forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var vid = btn.previousElementSibling;
+      if (!vid) return;
+      if (vid.requestFullscreen) vid.requestFullscreen();
+      else if (vid.webkitRequestFullscreen) vid.webkitRequestFullscreen();
+      else if (vid.webkitEnterFullscreen) vid.webkitEnterFullscreen();
+    });
+  });
   }
 
   /* ----------------------------------------------------------- image lightbox */

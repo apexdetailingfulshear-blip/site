@@ -89,7 +89,8 @@
     { name: "Shampoo de alfombras y tapicería", price: "Desde $50" },
   ];
 
-  var removed = {};
+  var selectedAddons = {}; // ai -> true
+var removed = {};
   var editMode = {};
   function resetState() {
     PACKAGES.forEach(function (pkg) {
@@ -158,7 +159,12 @@
     "#apex-pkgs .extras-section h2 span, #apex-pkgs .membership-section h2 span { color: #4a8ff5; }",
     "#apex-pkgs .section-subtitle { text-align: center; font-size: 0.85rem; color: #8a8fa8; margin-bottom: 24px; }",
     "#apex-pkgs .addons-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }",
-    "#apex-pkgs .addon-card { background: #111827; border: 1px solid #1e2a3a; border-radius: 10px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }",
+    "#apex-pkgs .addon-card { background: #111827; border: 1px solid #1e2a3a; border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; transition: border-color .2s, background .2s; }",
+"#apex-pkgs .addon-card.selected { border-color: #4a8ff5; background: rgba(74,143,245,.07); }",
+"#apex-pkgs .addon-info { display: flex; justify-content: space-between; align-items: center; gap: 8px; }",
+"#apex-pkgs .addon-add-btn { background: transparent; border: 1px solid #2e3c54; color: #8a8fa8; font-size: 12px; font-weight: 600; padding: 6px 10px; border-radius: 6px; cursor: pointer; transition: all .15s; }",
+"#apex-pkgs .addon-add-btn:hover { border-color: #4a8ff5; color: #4a8ff5; }",
+"#apex-pkgs .addon-card.selected .addon-add-btn { border-color: #4ac76e; color: #4ac76e; background: rgba(74,199,110,.08); }",
     "#apex-pkgs .addon-name { font-size: 13px; color: #c0c8e0; }",
     "#apex-pkgs .addon-price { font-size: 13px; font-weight: 700; color: #4a8ff5; white-space: nowrap; }",
     "#apex-pkgs .membership-section { max-width: 700px; margin: 0 auto; }",
@@ -271,13 +277,18 @@
 
   function fullHTML() {
     var cards = PACKAGES.map(cardHTML).join("");
-    var addons = ADDONS.map(function (a) {
+    var addons = ADDONS.map(function (a, ai) {
+      var isSel = !!selectedAddons[ai];
       return (
-        '<div class="addon-card"><span class="addon-name">' +
+        '<div class="addon-card' + (isSel ? " selected" : "") + '" data-addon="' + ai + '">' +
+        '<div class="addon-info"><span class="addon-name">' +
         esc(a.name) +
         '</span><span class="addon-price">' +
         esc(a.price) +
-        "</span></div>"
+        "</span></div>" +
+        '<button type="button" class="addon-add-btn" data-act="toggle-addon" data-addon="' + ai + '">' +
+        (isSel ? "✓ Añadido" : "+ Añadir") +
+        "</button></div>"
       );
     }).join("");
 
@@ -365,7 +376,22 @@
     })[0];
   }
 
-  function toggleEdit(id) {
+  function toggleAddon(ai) {
+  if (selectedAddons[ai]) delete selectedAddons[ai];
+  else selectedAddons[ai] = true;
+  renderAddon(ai);
+}
+
+function renderAddon(ai) {
+  var card = document.querySelector('#apex-pkgs .addon-card[data-addon="' + ai + '"]');
+  if (!card) return;
+  var isSel = !!selectedAddons[ai];
+  card.className = "addon-card" + (isSel ? " selected" : "");
+  var btn = card.querySelector(".addon-add-btn");
+  btn.textContent = isSel ? "✓ Añadido" : "+ Añadir";
+}
+
+function toggleEdit(id) {
     editMode[id] = !editMode[id];
     if (!editMode[id]) removed[id] = {};
     renderCard(pkgById(id));
@@ -393,10 +419,15 @@
       if (bookBtn) {
         if (bookBtn.classList.contains("btn-disabled")) return;
         if (typeof window.__apexOpenBooking === "function") {
-          window.__apexOpenBooking(bookBtn.getAttribute("data-book"));
+          window.__apexOpenBooking(bookBtn.getAttribute("data-book"), Object.keys(selectedAddons).map(function (i) { return ADDONS[i].name; }));
         } else {
           window.open("https://calendar.app.google/2VnG1xwYJw5LwXKXA", "_blank");
         }
+        return;
+      }
+      var addonBtn = e.target.closest('[data-act="toggle-addon"]');
+      if (addonBtn) {
+        toggleAddon(parseInt(addonBtn.getAttribute("data-addon"), 10));
         return;
       }
       var editBtn = e.target.closest(".edit-btn");

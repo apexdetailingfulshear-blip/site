@@ -116,6 +116,15 @@
     ".apex-quote-msg{margin-top:10px;font-size:13px;}",
     "@media (max-width:600px){#apex-modal{padding:20px;}#apex-gallery{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}.apex-lb-hint{display:none;}}",
   
+    /* prestige tagline banner */
+    ".apex-tagline{background:linear-gradient(135deg,#05070c 0%,#0d1526 55%,#05070c 100%);padding:64px 20px;text-align:center;border-top:1px solid #1e2a3a;border-bottom:1px solid #1e2a3a;}",
+    ".apex-tagline-inner{max-width:820px;margin:0 auto;}",
+    ".apex-tagline-kicker{color:#4a8ff5;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;}",
+    ".apex-tagline-main{color:#fff;font-size:clamp(22px,4vw,38px);font-weight:800;line-height:1.25;text-transform:uppercase;letter-spacing:.5px;margin:0;}",
+    ".apex-tagline-main span{color:#4a8ff5;}",
+    ".apex-tagline-divider{width:60px;height:3px;background:#4a8ff5;margin:24px auto;border-radius:2px;}",
+    ".apex-tagline-sub{color:#c7cedd;font-size:18px;font-style:italic;font-weight:500;letter-spacing:.5px;margin:0;}",
+
     /* how it works */
     ".apex-hiw{background:#05070c;padding:80px 16px;}",
     ".apex-hiw-inner{max-width:1100px;margin:0 auto;text-align:center;}",
@@ -630,6 +639,24 @@ var currentAddons = [];
   }
 
   /* ------------------------------------------------------------------ observers */
+  /* ------------------------------------------------- prestige tagline */
+  function injectTagline() {
+    var target = document.getElementById("servicios");
+    if (!target || document.getElementById("apex-tagline")) return;
+    ensureStyle();
+    var sec = document.createElement("div");
+    sec.id = "apex-tagline";
+    sec.className = "apex-tagline";
+    sec.innerHTML =
+      '<div class="apex-tagline-inner">' +
+      '<p class="apex-tagline-kicker">Excelencia en Cada Detalle</p>' +
+      '<h2 class="apex-tagline-main">Tratamos Cada Carro Como <span>una Obra de Arte</span></h2>' +
+      '<div class="apex-tagline-divider"></div>' +
+      '<p class="apex-tagline-sub">Tu Prestigio. Nuestra Pasi\u00f3n.</p>' +
+      '</div>';
+    target.parentNode.insertBefore(sec, target);
+  }
+
   /* ------------------------------------------------- how it works */
   var HIW_STEPS = [
     { title: "Reserva tu Horario", text: "Elige tu paquete y selecciona la fecha y hora que m\u00e1s te convenga." },
@@ -712,6 +739,7 @@ var currentAddons = [];
     addPriceNote();
     enhanceFooter();
     wireQuote();
+    injectTagline();
     injectHowItWorks();
     injectServiceAreas();
   }

@@ -116,11 +116,6 @@
     ".apex-quote-msg{margin-top:10px;font-size:13px;}",
     "@media (max-width:600px){#apex-modal{padding:20px;}#apex-gallery{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}.apex-lb-hint{display:none;}}",
   
-    /* trust badges strip */
-    ".apex-trust{background:#0b1220;border-top:1px solid #1e2a3a;border-bottom:1px solid #1e2a3a;padding:22px 16px;}",
-    ".apex-trust-inner{max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:center;gap:28px;}",
-    ".apex-trust-item{display:flex;align-items:center;gap:10px;color:#c7cedd;font-size:14px;font-weight:600;}",
-    ".apex-trust-ic{font-size:18px;line-height:1;}",
     /* how it works */
     ".apex-hiw{background:#05070c;padding:80px 16px;}",
     ".apex-hiw-inner{max-width:1100px;margin:0 auto;text-align:center;}",
@@ -635,30 +630,6 @@ var currentAddons = [];
   }
 
   /* ------------------------------------------------------------------ observers */
-  /* ------------------------------------------------- trust badges strip */
-  var TRUST_ITEMS = [
-    { ic: "\uD83D\uDE97", label: "Servicio m\u00f3vil a domicilio" },
-    { ic: "\u2705", label: "Resultados garantizados" },
-    { ic: "\uD83E\uDDF4", label: "Productos profesionales" },
-    { ic: "\uD83D\uDD52", label: "Puntualidad y confiabilidad" },
-  ];
-
-  function injectTrustBadges() {
-    var target = document.getElementById("servicios");
-    if (!target || document.getElementById("apex-trust")) return;
-    ensureStyle();
-    var wrap = document.createElement("div");
-    wrap.id = "apex-trust";
-    wrap.className = "apex-trust";
-    wrap.innerHTML =
-      '<div class="apex-trust-inner">' +
-      TRUST_ITEMS.map(function (t) {
-        return '<div class="apex-trust-item"><span class="apex-trust-ic">' + t.ic + '</span><span>' + t.label + '</span></div>';
-      }).join("") +
-      '</div>';
-    target.parentNode.insertBefore(wrap, target);
-  }
-
   /* ------------------------------------------------- how it works */
   var HIW_STEPS = [
     { title: "Reserva tu Horario", text: "Elige tu paquete y selecciona la fecha y hora que m\u00e1s te convenga." },
@@ -741,7 +712,6 @@ var currentAddons = [];
     addPriceNote();
     enhanceFooter();
     wireQuote();
-    injectTrustBadges();
     injectHowItWorks();
     injectServiceAreas();
   }

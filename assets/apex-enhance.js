@@ -246,6 +246,8 @@
   var files = [];
   var currentPkg = "";
   var currentAddons = [];
+  var currentRemoved = [];
+  var currentTotal = null;
   var overlay, previews, msg, submitBtn;
 
   function buildModal() {
@@ -259,6 +261,8 @@
       '<p class="amx-sub">' + t("Upload photos of your vehicle and we'll send you the <strong>final price</strong> before your appointment.") + "</p>" +
       '<span class="amx-pkg" id="amx-pkg"></span>' +
       '<p class="amx-addons" id="amx-addons" style="display:none;"></p>' +
+      '<p class="amx-removed" id="amx-removed" style="display:none;"></p>' +
+      '<p class="amx-total" id="amx-total" style="display:none;font-weight:600;"></p>' +
       "<label>" + t("Name") + ' <span class="amx-req">*</span></label>' +
       '<input type="text" id="amx-nombre" autocomplete="name" />' +
       "<label>" + t("Phone") + ' <span class="amx-req">*</span></label>' +
@@ -351,7 +355,7 @@
     msg.className = "amx-msg" + (kind ? " " + kind : "");
   }
 
-  function openModal(pkgName, addons) {
+  function openModal(pkgName, addons, removedNames, total) {
     // Rebuild if the modal is stale (e.g. language changed since it was built).
     var existing = document.getElementById("apex-modal-overlay");
     if (existing && existing.getAttribute("data-lang") !== getLang()) {
@@ -362,6 +366,8 @@
     overlay.setAttribute("data-lang", getLang());
     currentPkg = pkgName || "";
     currentAddons = addons && addons.length ? addons : [];
+    currentRemoved = removedNames && removedNames.length ? removedNames : [];
+    currentTotal = (typeof total === "number") ? total : null;
     files = [];
     renderPreviews();
     setMsg("", "");
@@ -372,6 +378,24 @@
       addonsEl.style.display = "block";
     } else {
       addonsEl.style.display = "none";
+    }
+    var removedEl = overlay.querySelector("#amx-removed");
+    if (removedEl) {
+      if (currentRemoved.length) {
+        removedEl.textContent = (getLang() === "es" ? "Quitado: " : "Removed: ") + currentRemoved.join(", ");
+        removedEl.style.display = "block";
+      } else {
+        removedEl.style.display = "none";
+      }
+    }
+    var totalEl = overlay.querySelector("#amx-total");
+    if (totalEl) {
+      if (currentTotal !== null) {
+        totalEl.textContent = (getLang() === "es" ? "Total estimado: " : "Estimated total: ") + "$" + currentTotal;
+        totalEl.style.display = "block";
+      } else {
+        totalEl.style.display = "none";
+      }
     }
     ["#amx-nombre", "#amx-tel", "#amx-correo", "#amx-veh", "#amx-notas", "#amx-fecha", "#amx-hora"].forEach(function (s) {
       overlay.querySelector(s).value = "";
@@ -410,6 +434,8 @@
     fd.append("vehiculo", overlay.querySelector("#amx-veh").value.trim());
     fd.append("paquete", currentPkg);
     fd.append("extras", currentAddons.join(", "));
+      fd.append("personalizacion", currentRemoved.length ? currentRemoved.join(", ") : "");
+      fd.append("total_estimado", currentTotal !== null ? ("$" + currentTotal) : "");
     fd.append("fecha", fecha);
     fd.append("hora", hora);
     fd.append("notas", overlay.querySelector("#amx-notas").value.trim());

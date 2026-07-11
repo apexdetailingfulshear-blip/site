@@ -14,7 +14,7 @@
   var MAX_MB = 10;
   var HOURS = "7:00 AM – 8:00 PM";
 
-  var SOCIAL = { facebook: "#", instagram: "#", tiktok: "#" };
+  var SOCIAL = { facebook: "https://www.facebook.com/ApexDetailingTX", instagram: "https://www.instagram.com/apexdetailingtx", tiktok: "#" };
   var CITY_BASE = "/areas/";
 
   /* ------------------------------------------------------------ i18n */
@@ -469,6 +469,10 @@
             }),
           }).catch(function () {});
         } catch (e) {}
+
+                submitBtn.disabled = false;
+                submitBtn.textContent = t("Submit & Book");
+                setTimeout(closeModal, 1200);
         
       })
       .catch(function () {

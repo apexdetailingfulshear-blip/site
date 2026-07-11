@@ -436,7 +436,17 @@
       if (bookBtn) {
         if (bookBtn.classList.contains("btn-disabled")) return;
         if (typeof window.__apexOpenBooking === "function") {
-          window.__apexOpenBooking(bookBtn.getAttribute("data-book"), Object.keys(selectedAddons).map(function (i) { return ADDONS[i].name; }));
+          var __pkgCardEl = bookBtn.closest(".pkg-card");
+          var __pkgIdForBook = __pkgCardEl ? __pkgCardEl.getAttribute("data-pkg") : null;
+          var __pkgForBook = __pkgIdForBook ? pkgById(__pkgIdForBook) : null;
+          var __removedNames = [];
+          if (__pkgForBook) {
+            __pkgForBook.indices.forEach(function (si, li) {
+              if (removed[__pkgForBook.id][li]) __removedNames.push(t(SERVICES[si].name));
+            });
+          }
+          var __bookTotal = __pkgForBook ? pkgTotal(__pkgForBook) : null;
+          window.__apexOpenBooking(bookBtn.getAttribute("data-book"), Object.keys(selectedAddons).map(function (i) { return ADDONS[i].name; }), __removedNames, __bookTotal);
         } else {
           window.open("https://calendar.app.google/2VnG1xwYJw5LwXKXA", "_blank");
         }

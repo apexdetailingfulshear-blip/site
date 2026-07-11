@@ -53,8 +53,8 @@
     "Add-ons: ": "Adicionales: ",
     "Sending...": "Enviando...",
     "Uploading your photos...": "Subiendo tus fotos...",
-    "Thank you! We'll send you your final price. Opening the calendar...":
-      "¡Gracias! Te enviaremos tu precio final. Abriendo la agenda...",
+    "Thank you! We'll send you your final price soon.":
+      "¡Gracias! Te enviaremos tu precio final pronto.",
     "We couldn't submit the form. Message us on WhatsApp or try again.":
       "No pudimos enviar el formulario. Escríbenos por WhatsApp o intenta de nuevo.",
     "Only images are allowed.": "Solo se permiten imágenes.",
@@ -448,7 +448,7 @@
       fetch("/", { method: "POST", body: fd })
       .then(function (r) {
         if (!r.ok) throw new Error("status " + r.status);
-        setMsg(t("Thank you! We'll send you your final price. Opening the calendar..."), "ok");
+        setMsg(t("Thank you! We'll send you your final price soon."), "ok");
         try {
           fetch("/.netlify/functions/create-calendar-event", {
             method: "POST",
@@ -469,7 +469,7 @@
             }),
           }).catch(function () {});
         } catch (e) {}
-        setTimeout(function () { window.location.href = CAL; }, 1200);
+        
       })
       .catch(function () {
         submitBtn.disabled = false;

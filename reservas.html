@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Reservas - Apex Detailing</title>
+<style>
+  body { font-family: system-ui, Arial, sans-serif; background:#0e1626; color:#fff; margin:0; padding:24px; }
+  h1 { font-size:1.3rem; margin:0; }
+  .gate { max-width:340px; margin:60px auto; background:#141d2e; padding:24px; border-radius:12px; }
+  .gate input { width:100%; padding:10px; border-radius:8px; border:1px solid #2e3a54; background:#0e1626; color:#fff; margin:10px 0; box-sizing:border-box; }
+  .gate button, .refresh { background:#4a8fff; color:#fff; border:none; padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:600; }
+  .err { color:#e05c5c; font-size:13px; margin-top:8px; min-height:16px; }
+  table { width:100%; border-collapse: collapse; margin-top:20px; font-size:13px; }
+  th, td { border-bottom:1px solid #2e3a54; padding:8px; text-align:left; vertical-align:top; }
+  th { color:#8a8fa8; font-weight:600; }
+  .hidden { display:none; }
+  .top-row { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+</style>
+</head>
+<body>
+  <div id="gate" class="gate">
+    <h1>Reservas - Acceso</h1>
+    <input type="password" id="key" placeholder="Clave de acceso" />
+    <button id="enter">Entrar</button>
+    <div class="err" id="err"></div>
+  </div>
+
+  <div id="panel" class="hidden">
+    <div class="top-row">
+      <h1>Reservas y cotizaciones</h1>
+      <button class="refresh" id="refresh">Actualizar</button>
+    </div>
+    <div id="list">Cargando...</div>
+  </div>
+
+<script>
+(function () {
+  var key = "";
+  var gate = document.getElementById("gate");
+  var panel = document.getElementById("panel");
+  var err = document.getElementById("err");
+  var listEl = document.getElementById("list");
+
+  function esc(s) {
+    return (s === undefined || s === null ? "" : s).toString().replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function load() {
+    listEl.textContent = "Cargando...";
+    fetch("/.netlify/functions/list-reservas", { headers: { "x-admin-key": key } })
+      .then(function (r) {
+        if (r.status === 401) throw new Error("clave incorrecta");
+        if (!r.ok) throw new Error("status " + r.status);
+        return r.json();
+      })
+      .then(function (items) {
+        if (!items.length) {
+          listEl.textContent = "Todavia no hay reservas.";
+          return;
+        }
+        var rows = items.map(function (it) {
+          return "<tr>" +
+            "<td>" + esc(it.recibido ? new Date(it.recibido).toLocaleString() : "") + "</td>" +
+            "<td>" + esc(it.nombre) + "<br>" + esc(it.telefono) + "</td>" +
+            "<td>" + esc(it.vehiculo) + "</td>" +
+            "<td>" + esc(it.paquete) + "</td>" +
+            "<td>" + esc(it.personalizacion) + "</td>" +
+            "<td>" + esc(it.extras) + "</td>" +
+            "<td>" + esc(it.total_estimado) + "</td>" +
+            "<td>" + esc(it.fecha) + " " + esc(it.hora) + "</td>" +
+            "<td>" + esc(it.notas) + "</td>" +
+            "</tr>";
+        }).join("");
+        listEl.innerHTML =
+          "<table><thead><tr>" +
+          "<th>Recibido</th><th>Cliente</th><th>Vehiculo</th><th>Paquete</th>" +
+          "<th>Personalizacion</th><th>Add-ons</th><th>Total est.</th><th>Fecha/Hora</th><th>Notas</th>" +
+          "</tr></thead><tbody>" + rows + "</tbody></table>";
+      })
+      .catch(function (e) {
+        listEl.textContent = "No se pudo cargar (" + e.message + ").";
+      });
+  }
+
+  document.getElementById("enter").addEventListener("click", function () {
+    key = document.getElementById("key").value.trim();
+    if (!key) { err.textContent = "Ingresa la clave."; return; }
+    gate.classList.add("hidden");
+    panel.classList.remove("hidden");
+    load();
+  });
+
+  document.getElementById("key").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") document.getElementById("enter").click();
+  });
+
+  document.getElementById("refresh").addEventListener("click", load);
+})();
+</script>
+</body>
+</html>

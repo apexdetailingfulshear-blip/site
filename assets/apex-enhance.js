@@ -449,6 +449,26 @@
       .then(function (r) {
         if (!r.ok) throw new Error("status " + r.status);
         setMsg(t("Thank you! We'll send you your final price. Opening the calendar..."), "ok");
+        try {
+          fetch("/.netlify/functions/create-calendar-event", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              nombre: nombre,
+              telefono: tel,
+              correo: overlay.querySelector("#amx-correo").value.trim(),
+              vehiculo: overlay.querySelector("#amx-veh").value.trim(),
+              paquete: currentPkg,
+              extras: currentAddons.join(", "),
+              personalizacion: currentRemoved.length ? currentRemoved.join(", ") : "",
+              total_estimado: currentTotal !== null ? ("$" + currentTotal) : "",
+              fecha: fecha,
+              hora: hora,
+              notas: overlay.querySelector("#amx-notas").value.trim(),
+              origen: "booking",
+            }),
+          }).catch(function () {});
+        } catch (e) {}
         setTimeout(function () { window.location.href = CAL; }, 1200);
       })
       .catch(function () {
@@ -716,6 +736,21 @@
         .then(function (r) {
           if (!r.ok) throw new Error();
           showQuoteMsg(form, t("Thank you! We received your request. We'll contact you soon."), "ok");
+          try {
+            fetch("/.netlify/functions/create-calendar-event", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                nombre: nombre,
+                telefono: tel,
+                vehiculo: veh,
+                servicio: serv,
+                fecha: fecha,
+                mensaje: mensaje,
+                origen: "quote",
+              }),
+            }).catch(function () {});
+          } catch (e) {}
           form.reset();
         })
         .catch(function () {

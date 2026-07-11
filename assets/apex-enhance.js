@@ -445,26 +445,6 @@
     submitBtn.textContent = t("Sending...");
     setMsg(t("Uploading your photos..."), "");
 
-          try {
-        fetch("/.netlify/functions/save-reserva", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            nombre: nombre,
-            telefono: tel,
-            correo: overlay.querySelector("#amx-correo").value.trim(),
-            vehiculo: overlay.querySelector("#amx-veh").value.trim(),
-            paquete: currentPkg,
-            extras: currentAddons.join(", "),
-            personalizacion: currentRemoved.length ? currentRemoved.join(", ") : "",
-            total_estimado: currentTotal !== null ? ("$" + currentTotal) : "",
-            fecha: fecha,
-            hora: hora,
-            notas: overlay.querySelector("#amx-notas").value.trim(),
-          }),
-        }).catch(function () {});
-      } catch (e) {}
-
       fetch("/", { method: "POST", body: fd })
       .then(function (r) {
         if (!r.ok) throw new Error("status " + r.status);
@@ -880,3 +860,9 @@
     apply();
   }
 })();
+
+      
+        
+      
+      Stop Claude
+    

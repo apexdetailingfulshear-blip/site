@@ -895,9 +895,3 @@
     apply();
   }
 })();
-
-      
-        
-      
-      Stop Claude
-    

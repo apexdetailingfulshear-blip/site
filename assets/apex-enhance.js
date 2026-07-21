@@ -692,10 +692,10 @@
   // Social icons: process each placeholder exactly once (fixes a re-render
   // bug where a stale icon could inherit the wrong network's link), and
   // drop any icon with no confirmed URL instead of leaving a dead "#" link.
-  var candidates = [].slice.call(footer.querySelectorAll("a")).filter(function (a) {
-    return a.getAttribute("data-apex-social") !== "1" &&
-      (a.getAttribute("href") === "#" || a.querySelector("svg"));
-  });
+  var socialRow = footer.querySelector(".flex.justify-center.gap-4") || footer;
+   var candidates = [].slice.call(socialRow.querySelectorAll("a")).filter(function (a) {
+     return a.getAttribute("data-apex-social") !== "1";
+   });
    var order = ["facebook", "instagram"];
    candidates.forEach(function (a, i) {
      a.setAttribute("data-apex-social", "1");

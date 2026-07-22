@@ -141,7 +141,6 @@
 
  var GALLERY = [
 { type: "drive", id: "1Wuzt1OHtPyBSe8pqM6HvBYW3UNWXonDO" },
-{ type: "drive", id: "14KUGy3SaatcdH9_2RIYn9SJZDlliaXSa" },
 { type: "drive", id: "1ZpBGBV-OI-GB9ozcrsAH9BJYVN-d7RM0" },
 { type: "video", src: "/assets/gallery/video-1.mp4", poster: "/assets/gallery/poster-1.jpg" },
 { type: "video", src: "/assets/gallery/video-2.mp4", poster: "/assets/gallery/poster-2.jpg" },

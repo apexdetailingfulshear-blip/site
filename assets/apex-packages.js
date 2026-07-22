@@ -44,7 +44,7 @@
           id: "complete",
           name: "Complete Detail",
           price: 249,
-          img: "https://images.unsplash.com/photo-1567808291548-fc3ee04dbcf0?q=80&w=800&auto=format&fit=crop",
+          img: "https://images.unsplash.com/photo-1605164599894-ca98960d41b6?q=80&w=800&auto=format&fit=crop",
           includes: [
             "Full exterior hand wash & wax",
             "Complete interior vacuum & wipe-down",
@@ -101,7 +101,7 @@
           id: "ceramic",
           name: "Ceramic Coating",
           price: 449,
-          img: "https://images.unsplash.com/photo-1708805282676-0c15476eb8a2?q=80&w=800&auto=format&fit=crop",
+          img: "https://images.unsplash.com/photo-1611651186486-415f04eb78e4?q=80&w=800&auto=format&fit=crop",
           includes: [
             "Paint decontamination & prep",
             "Professional-grade ceramic coating",

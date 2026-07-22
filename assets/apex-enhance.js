@@ -1,5 +1,5 @@
 /*
- * Apex Detailing â booking flow + gallery + extra sections + UI polish
+ * Apex Detailing — booking flow + gallery + extra sections + UI polish
  * Injected at runtime (the site ships as a compiled bundle with no source).
  *
  * Bilingual: the site's language menu only translates its native React content,
@@ -13,7 +13,7 @@
  var CAL = "https://calendar.app.google/2VnG1xwYJw5LwXKXA";
   var MAX_FILES = 8;
   var MAX_MB = 10;
-  var HOURS = "7:00 AM â 8:00 PM";
+  var HOURS = "7:00 AM – 8:00 PM";
   var SLOGAN = "We Treat Every Car Like a Masterpiece.";
   var INSTAGRAM_HANDLE = "@Apex_Detailing_Fulshear";
 
@@ -31,7 +31,7 @@
    var btns = document.querySelectorAll("header button, nav button, button");
    for (var i = 0; i < btns.length; i++) {
      var tx = (btns[i].textContent || "").trim();
-     if (/^Espa(Ã±|n)ol$/i.test(tx)) return "es";
+     if (/^Espa(ñ|n)ol$/i.test(tx)) return "es";
      if (/^English$/i.test(tx)) return "en";
    }
    return (document.documentElement.lang || "en").slice(0, 2) === "es" ? "es" : "en";
@@ -41,21 +41,21 @@
    // modal
    "Book Your Detail": "Reserva tu Detallado",
    "Upload photos of your vehicle and we'll send you the <strong>final price</strong> before your appointment.":
-     "Sube fotos de tu vehÃ­culo y te enviaremos el <strong>precio final</strong> antes de tu cita.",
+     "Sube fotos de tu vehículo y te enviaremos el <strong>precio final</strong> antes de tu cita.",
    "Close": "Cerrar",
    "Name": "Nombre",
-   "Phone": "TelÃ©fono",
+   "Phone": "Teléfono",
    "Email (optional)": "Correo (opcional)",
-   "Vehicle (make, model & year)": "VehÃ­culo (marca, modelo y aÃ±o)",
+   "Vehicle (make, model & year)": "Vehículo (marca, modelo y año)",
    "E.g. Nissan Rogue 2019": "Ej. Nissan Rogue 2019",
    "Preferred date": "Fecha preferida",
    "Preferred time": "Hora preferida",
-   "Vehicle photos": "Fotos del vehÃ­culo",
+   "Vehicle photos": "Fotos del vehículo",
    "Tap to upload": "Toca para subir",
-   "or drag your photos here": "o arrastra tus fotos aquÃ­",
-   "Interior, exterior and any details (max.": "Interior, exterior y cualquier detalle (mÃ¡x.",
+   "or drag your photos here": "o arrastra tus fotos aquí",
+   "Interior, exterior and any details (max.": "Interior, exterior y cualquier detalle (máx.",
    "Notes (optional)": "Notas (opcional)",
-   "Tell us anything we should know...": "CuÃ©ntanos algo que debamos saber...",
+   "Tell us anything we should know...": "Cuéntanos algo que debamos saber...",
    "Cancel": "Cancelar",
    "Submit & Book": "Enviar y Reservar",
    "Detail": "Detallado",
@@ -63,38 +63,38 @@
    "Sending...": "Enviando...",
    "Uploading your photos...": "Subiendo tus fotos...",
    "Thank you! We'll send you your final price soon.":
-     "Â¡Gracias! Te enviaremos tu precio final pronto.",
+     "¡Gracias! Te enviaremos tu precio final pronto.",
    "We couldn't submit the form. Message us on WhatsApp or try again.":
-     "No pudimos enviar el formulario. EscrÃ­benos por WhatsApp o intenta de nuevo.",
-   "Only images are allowed.": "Solo se permiten imÃ¡genes.",
+     "No pudimos enviar el formulario. Escríbenos por WhatsApp o intenta de nuevo.",
+   "Only images are allowed.": "Solo se permiten imágenes.",
    "Each photo must be under": "Cada foto debe pesar menos de",
    "Please enter your name.": "Por favor ingresa tu nombre.",
-   "Please enter your phone number.": "Por favor ingresa tu telÃ©fono.",
+   "Please enter your phone number.": "Por favor ingresa tu teléfono.",
    "Please choose a date.": "Por favor elige una fecha.",
    "Please choose a time.": "Por favor elige una hora.",
-   "Upload at least one photo of your vehicle.": "Sube al menos una foto de tu vehÃ­culo.",
+   "Upload at least one photo of your vehicle.": "Sube al menos una foto de tu vehículo.",
    "Remove photo": "Quitar foto",
    // gallery / lightbox
    "Video": "Video",
    "Fullscreen": "Pantalla completa",
    "View fullscreen": "Ver en pantalla completa",
-   "Scroll or +/â to zoom Â· drag to pan Â· double-click to zoom":
-     "Rueda o +/â para acercar Â· arrastra para mover Â· doble clic para acercar",
+   "Scroll or +/− to zoom · drag to pan · double-click to zoom":
+     "Rueda o +/− para acercar · arrastra para mover · doble clic para acercar",
    "Zoom out": "Alejar",
    "Reset": "Restablecer",
    "Zoom in": "Acercar",
    // footer
-   "Open every day": "Abierto todos los dÃ­as",
+   "Open every day": "Abierto todos los días",
    // quote form
-   "Please enter your name and phone number.": "Por favor ingresa tu nombre y telÃ©fono.",
+   "Please enter your name and phone number.": "Por favor ingresa tu nombre y teléfono.",
    "Submitting your request...": "Enviando tu solicitud...",
    "Thank you! We received your request. We'll contact you soon.":
-     "Â¡Gracias! Recibimos tu solicitud. Te contactaremos pronto.",
+     "¡Gracias! Recibimos tu solicitud. Te contactaremos pronto.",
    "We couldn't submit it. Call us at 346-307-0407 or try again.":
-     "No pudimos enviar. LlÃ¡manos al 346-307-0407 o intenta de nuevo.",
+     "No pudimos enviar. Llámanos al 346-307-0407 o intenta de nuevo.",
    // price note
-   "ð¸ When booking, upload photos of your vehicle and we'll confirm the <strong>final price</strong> before your appointment.":
-     "ð¸ Al reservar, sube fotos de tu vehÃ­culo y te confirmamos el <strong>precio final</strong> antes de tu cita.",
+   "📸 When booking, upload photos of your vehicle and we'll confirm the <strong>final price</strong> before your appointment.":
+     "📸 Al reservar, sube fotos de tu vehículo y te confirmamos el <strong>precio final</strong> antes de tu cita.",
    // tagline
    "Excellence in Every Detail": "Excelencia en Cada Detalle",
    // how it works
@@ -103,13 +103,13 @@
      "Elige tu paquete y selecciona la fecha y hora que mejor te convenga.",
    "We Come to You": "Vamos a Ti",
    "We arrive with all the necessary equipment, so you don't have to go anywhere.":
-     "Llegamos con todo el equipo necesario, para que no tengas que ir a ningÃºn lado.",
+     "Llegamos con todo el equipo necesario, para que no tengas que ir a ningún lado.",
    "Enjoy Your Car": "Disfruta tu Auto",
    "Get your vehicle back clean, shiny, and like new.":
-     "Recibe tu vehÃ­culo limpio, brillante y como nuevo.",
+     "Recibe tu vehículo limpio, brillante y como nuevo.",
    // service areas
    "Mobile detailing service in Houston and surrounding areas.":
-     "Servicio de detallado mÃ³vil en Houston y Ã¡reas cercanas.",
+     "Servicio de detallado móvil en Houston y áreas cercanas.",
    // social / contact (kept in English on purpose; see SLOGAN/INSTAGRAM_HANDLE)
  };
 
@@ -403,7 +403,7 @@
      img.onload = function () { URL.revokeObjectURL(img.src); };
      var rm = document.createElement("button");
      rm.type = "button";
-     rm.textContent = "Ã";
+     rm.textContent = "×";
      rm.setAttribute("aria-label", t("Remove photo"));
      rm.addEventListener("click", function () { files.splice(i, 1); renderPreviews(); });
      d.appendChild(img);
@@ -552,7 +552,7 @@
    ensureStyle();
    var headHTML =
      '<h2 class="text-3xl md:text-4xl font-bold text-center mb-12">' +
-     hdr("Our", "Gallery", "Nuestra", "GalerÃ­a", "text-blue-brand") +
+     hdr("Our", "Gallery", "Nuestra", "Galería", "text-blue-brand") +
      "</h2>";
    var items = GALLERY.map(function (m) {
      if (m.type === "drive") {
@@ -571,7 +571,7 @@
      return (
        '<div class="amg-item amg-photo" data-full="' + m.src + '">' +
        '<img src="' + m.src + '" alt="Apex Detailing" loading="lazy" />' +
-       '<button class="amg-expand" type="button" aria-label="' + esc(t("View fullscreen")) + '" title="' + esc(t("Fullscreen")) + '">â¶</button></div>'
+       '<button class="amg-expand" type="button" aria-label="' + esc(t("View fullscreen")) + '" title="' + esc(t("Fullscreen")) + '">⛶</button></div>'
        );
    }).join("");
    sec.setAttribute("data-apex-gallery", "1");
@@ -628,9 +628,9 @@
    lb.innerHTML =
      '<button id="apex-lb-close" type="button" aria-label="' + esc(t("Close")) + '">&times;</button>' +
      '<img alt="Apex Detailing" />' +
-     '<div class="apex-lb-hint">' + t("Scroll or +/â to zoom Â· drag to pan Â· double-click to zoom") + "</div>" +
-     '<div class="apex-lb-ctrls"><button type="button" data-z="out" aria-label="' + esc(t("Zoom out")) + '">â</button>' +
-     '<button type="button" data-z="reset" aria-label="' + esc(t("Reset")) + '">â²</button>' +
+     '<div class="apex-lb-hint">' + t("Scroll or +/− to zoom · drag to pan · double-click to zoom") + "</div>" +
+     '<div class="apex-lb-ctrls"><button type="button" data-z="out" aria-label="' + esc(t("Zoom out")) + '">−</button>' +
+     '<button type="button" data-z="reset" aria-label="' + esc(t("Reset")) + '">⟲</button>' +
      '<button type="button" data-z="in" aria-label="' + esc(t("Zoom in")) + '">+</button></div>';
    document.body.appendChild(lb);
    lbImg = lb.querySelector("img");
@@ -707,7 +707,7 @@
 
  /* --------------------------------------------------- footer: cities, hours, social */
  function slugify(s) {
-   return s.toLowerCase().normalize("NFD").replace(/[Ì-Í¯]/g, "")
+   return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
    .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
  }
 
@@ -751,7 +751,7 @@
   }
    var hoursEl = footer.querySelector(".apex-hours");
    if (hoursEl) {
-     var desiredHours = t("Open every day") + " Â· <strong>" + HOURS + "</strong>";
+     var desiredHours = t("Open every day") + " · <strong>" + HOURS + "</strong>";
      if (hoursEl.innerHTML !== desiredHours) hoursEl.innerHTML = desiredHours;
    }
 
@@ -768,7 +768,7 @@
 
   // Dynamic copyright year (no hardcoded year).
   var copyP = [].slice.call(footer.querySelectorAll("p")).find(function (p) {
-    return /Â©\s*\d{4}/.test(p.textContent);
+    return /©\s*\d{4}/.test(p.textContent);
   });
    if (copyP) {
      var fixedYear = copyP.textContent.replace(/\d{4}/, String(new Date().getFullYear()));
@@ -973,7 +973,7 @@
    if (!header) return;
    var note = document.createElement("p");
    note.className = "price-note";
-   note.innerHTML = t("ð¸ When booking, upload photos of your vehicle and we'll confirm the <strong>final price</strong> before your appointment.");
+   note.innerHTML = t("📸 When booking, upload photos of your vehicle and we'll confirm the <strong>final price</strong> before your appointment.");
    header.parentNode.insertBefore(note, header.nextSibling);
  }
 
@@ -1011,7 +1011,7 @@
    sec.className = "apex-hiw";
    sec.innerHTML =
      '<div class="apex-hiw-inner">' +
-     '<h2 class="apex-hiw-title">' + hdr("How It", "Works", "CÃ³mo", "Funciona") + "</h2>" +
+     '<h2 class="apex-hiw-title">' + hdr("How It", "Works", "Cómo", "Funciona") + "</h2>" +
      '<div class="apex-hiw-steps">' +
      HIW_STEPS.map(function (s, i) {
        return '<div class="apex-hiw-step"><div class="apex-hiw-num">' + (i + 1) + "</div>" +
@@ -1039,7 +1039,7 @@
    sec.className = "apex-areas";
    sec.innerHTML =
      '<div class="apex-areas-inner">' +
-     '<h2 class="apex-areas-title">' + hdr("Areas We", "Serve", "Ãreas que", "Atendemos") + "</h2>" +
+     '<h2 class="apex-areas-title">' + hdr("Areas We", "Serve", "Áreas que", "Atendemos") + "</h2>" +
      '<p class="apex-areas-sub">' + t("Mobile detailing service in Houston and surrounding areas.") + "</p>" +
      '<div class="apex-areas-grid">' +
      CITIES.map(function (c) {

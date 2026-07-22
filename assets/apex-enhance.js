@@ -21,7 +21,7 @@
  // Facebook reuses the confirmed link already present in the project.
  // Any network with no confirmed URL is left out entirely (no dead links).
  var SOCIAL = {
-   facebook: "https://www.facebook.com/ApexDetailingTX",
+   facebook: "https://www.facebook.com/ApexDetailing",
    instagram: "https://www.instagram.com/apex_detailing_fulshear/",
  };
   var CITY_BASE = "/areas/";

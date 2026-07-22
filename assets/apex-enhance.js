@@ -1024,7 +1024,7 @@
  }
 
  /* ------------------------------------------------------------------ observers */
- function apply() {
+ function apply() { fixLogoLink(); function fixLogoLink() { var a = document.querySelectorAll('a[href="#"]'); for (var i=0;i<a.length;i++){ if (a[i].querySelector('img[alt="Apex Detailing"]') && !a[i].getAttribute('data-apex-logo-fixed')) { a[i].setAttribute('href','/'); a[i].setAttribute('data-apex-logo-fixed','1'); } } }
    rewireHero();
    injectGallery();
    addPriceNote();

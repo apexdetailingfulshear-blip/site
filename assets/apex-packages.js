@@ -95,7 +95,7 @@ var STYLE = [
 "#apex-pkgs .pkg-name { font-size: 1.3rem; font-weight: 700; color: #fff; letter-spacing: .01em; }",
 "#apex-pkgs .service-list { list-style: none; display: flex; flex-direction: column; gap: 8px; flex: 1; }",
 "#apex-pkgs .service-item { font-size: 13.5px; color: #c7ccd1; line-height: 1.5; padding-left: 20px; position: relative; }",
-"#apex-pkgs .service-item::before { content: '\2713'; position: absolute; left: 0; top: 0; color: #29b6f6; font-weight: 700; }",
+"#apex-pkgs .service-item::before { content: '\\2713'; position: absolute; left: 0; top: 0; color: #29b6f6; font-weight: 700; }",
 "#apex-pkgs .pkg-total-row { display: flex; justify-content: space-between; align-items: baseline; padding-top: 14px; border-top: 1px solid #4b5257; }",
 "#apex-pkgs .total-label { font-size: 12px; color: #a8adb1; text-transform: uppercase; letter-spacing: .05em; }",
 "#apex-pkgs .total-amount { font-size: 1.7rem; font-weight: 700; color: #29b6f6; }",

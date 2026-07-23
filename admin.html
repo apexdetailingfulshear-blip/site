@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Panel de Administrador - Apex Detailing</title>
+<style>
+* { box-sizing: border-box; }
+body { font-family: system-ui, Arial, sans-serif; background:#0e1626; color:#fff; margin:0; padding:16px; }
+h1 { font-size:1.3rem; margin:0; }
+h2 { font-size:1.05rem; margin:0 0 12px; color:#cfe0ff; }
+.gate { max-width:340px; margin:60px auto; background:#141d2e; padding:24px; border-radius:12px; }
+.gate input { width:100%; padding:10px; border-radius:8px; border:1px solid #2e3a54; background:#0e1626; color:#fff; margin:10px 0; box-sizing:border-box; }
+input, textarea, select { width:100%; padding:9px; border-radius:8px; border:1px solid #2e3a54; background:#0e1626; color:#fff; margin:6px 0; box-sizing:border-box; font-family:inherit; font-size:14px; }
+button { background:#4a8fff; color:#fff; border:none; padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:600; font-size:14px; }
+button.sec { background:#2e3a54; }
+button.danger { background:#c0392b; }
+button:disabled { opacity:.5; cursor:default; }
+.err { color:#e05c5c; font-size:13px; margin-top:8px; min-height:16px; }
+.ok { color:#4ad685; font-size:13px; margin-top:8px; min-height:16px; }
+.hidden { display:none !important; }
+.top-row { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+.tag { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; background:#2e3a54; color:#cfe0ff; }
+.tabs { display:flex; gap:8px; margin-bottom:18px; }
+.tabs button { background:#141d2e; border:1px solid #2e3a54; }
+.tabs button.active { background:#4a8fff; }
+.card { background:#141d2e; border:1px solid #2e3a54; border-radius:12px; padding:14px; margin-bottom:12px; }
+.stars { color:#f5c518; font-size:15px; letter-spacing:1px; }
+.thumb { max-width:120px; max-height:90px; border-radius:8px; display:block; margin:8px 0; object-fit:cover; }
+.row { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; }
+.grid .card { padding:8px; }
+.grid img, .grid video { width:100%; height:110px; object-fit:cover; border-radius:8px; background:#000; }
+.meta { font-size:12px; color:#8a8fa8; margin-top:6px; }
+.progress { height:8px; background:#0e1626; border-radius:4px; overflow:hidden; margin-top:8px; }
+.progress > div { height:100%; background:#4a8fff; width:0%; }
+label { font-size:12px; color:#8a8fa8; display:block; margin-top:8px; }
+</style>
+</head>
+<body>
+<div id="gate" class="gate">
+<h1>Panel de Administrador</h1>
+<input type="password" id="key" placeholder="Clave de acceso" />
+<button id="enter">Entrar</button>
+<div class="err" id="gateErr"></div>
+</div>
+
+<div id="panel" class="hidden">
+<div class="top-row">
+<h1>Panel de Administrador - Apex Detailing</h1>
+<button class="sec" id="logout">Salir</button>
+</div>
+<div class="tabs">
+<button id="tabReviewsBtn" class="active">Resenas</button>
+<button id="tabMediaBtn">Galeria</button>
+</div>
+
+<div id="tabReviews">
+<h2>Resenas de clientes</h2>
+<div id="reviewsList">Cargando...</div>
+</div>
+
+<div id="tabMedia" class="hidden">
+<h2>Subir nuevo contenido</h2>
+<div class="card">
+<label>Archivo (foto o video)</label>
+<input type="file" id="mediaFile" accept="image/*,video/*" />
+<label>Titulo</label>
+<input type="text" id="mediaTitulo" placeholder="Titulo (opcional)" />
+<label>Descripcion</label>
+<textarea id="mediaDescripcion" rows="2" placeholder="Descripcion (opcional)"></textarea>
+<label>Categoria</label>
+<select id="mediaCategoria">
+<option>Full Detail</option>
+<option>Interior Detail</option>
+<option>Exterior Detail</option>
+<option>Ceramic Coating</option>
+<option>Polishing</option>
+<option>Headlight Restoration</option>
+<option>Before &amp; After</option>
+</select>
+<div id="mediaPreviewWrap"></div>
+<div class="row">
+<button id="mediaUploadBtn">Publicar</button>
+</div>
+<div class="progress hidden" id="mediaProgressWrap"><div id="mediaProgress"></div></div>
+<div class="err" id="mediaErr"></div>
+<div class="ok" id="mediaOk"></div>
+</div>
+<h2>Contenido publicado</h2>
+<div id="mediaList" class="grid">Cargando...</div>
+</div>
+</div>
+
+<script>
+(function () {
+var key = "";
+var gate = document.getElementById("gate");
+var panel = document.getElementById("panel");
+var keyInput = document.getElementById("key");
+var gateErr = document.getElementById("gateErr");
+
+function esc(s) {
+return (s === undefined || s === null ? "" : s).toString().replace(/[&<>"']/g, function (c) {
+return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+});
+}
+function stars(n) {
+n = parseInt(n, 10) || 0;
+var s = "";
+for (var i = 1; i <= 5; i++) s += (i <= n ? "★" : "☆");
+return s;
+}
+
+function tryEnter() {
+var k = keyInput.value;
+if (!k) return;
+fetch("/.netlify/functions/admin-list-reviews", { headers: { "x-admin-key": k } })
+.then(function (r) {
+if (r.status === 401) throw new Error("clave incorrecta");
+if (!r.ok) throw new Error("status " + r.status);
+key = k;
+sessionStorage.setItem("apex_admin_key", k);
+gate.classList.add("hidden");
+panel.classList.remove("hidden");
+loadReviews();
+loadMedia();
+})
+.catch(function (e) { gateErr.textContent = e.message; });
+}
+document.getElementById("enter").addEventListener("click", tryEnter);
+keyInput.addEventListener("keydown", function (e) { if (e.key === "Enter") tryEnter(); });
+document.getElementById("logout").addEventListener("click", function () {
+sessionStorage.removeItem("apex_admin_key");
+location.reload();
+});
+
+var savedKey = sessionStorage.getItem("apex_admin_key");
+if (savedKey) { keyInput.value = savedKey; tryEnter(); }
+
+/* tabs */
+var tabReviewsBtn = document.getElementById("tabReviewsBtn");
+var tabMediaBtn = document.getElementById("tabMediaBtn");
+var tabReviews = document.getElementById("tabReviews");
+var tabMedia = document.getElementById("tabMedia");
+tabReviewsBtn.addEventListener("click", function () {
+tabReviewsBtn.classList.add("active"); tabMediaBtn.classList.remove("active");
+tabReviews.classList.remove("hidden"); tabMedia.classList.add("hidden");
+});
+tabMediaBtn.addEventListener("click", function () {
+tabMediaBtn.classList.add("active"); tabReviewsBtn.classList.remove("active");
+tabMedia.classList.remove("hidden"); tabReviews.classList.add("hidden");
+});
+
+/* ---------------- reviews ---------------- */
+var reviewsList = document.getElementById("reviewsList");
+
+function loadReviews() {
+reviewsList.textContent = "Cargando...";
+fetch("/.netlify/functions/admin-list-reviews", { headers: { "x-admin-key": key } })
+.then(function (r) { return r.json(); })
+.then(renderReviews)
+.catch(function () { reviewsList.textContent = "Error al cargar."; });
+}
+
+function renderReviews(items) {
+if (!items.length) { reviewsList.textContent = "Todavia no hay resenas."; return; }
+reviewsList.innerHTML = items.map(function (it) {
+var badge = it.estado === "aprobada" ? "<span class=\"tag\">Aprobada</span>" : (it.estado === "rechazada" ? "<span class=\"tag\">Rechazada</span>" : "<span class=\"tag\">Pendiente</span>");
+var foto = it.foto ? '<img class="thumb" src="' + it.foto + '" />' : "";
+return '<div class="card" data-id="' + esc(it.id) + '">' +
+badge + ' <span class="stars">' + stars(it.calificacion) + '</span>' +
+'<div><strong>' + esc(it.nombre) + '</strong></div>' +
+'<div>' + esc(it.comentario) + '</div>' +
+foto +
+'<div class="meta">' + esc(it.fecha ? new Date(it.fecha).toLocaleString() : "") + '</div>' +
+'<div class="row">' +
+(it.estado !== "aprobada" ? '<button class="act" data-action="approve">Aprobar</button>' : '') +
+(it.estado !== "rechazada" ? '<button class="sec act" data-action="reject">Rechazar</button>' : '') +
+'<button class="danger act" data-action="delete">Eliminar</button>' +
+'</div></div>';
+}).join("");
+reviewsList.querySelectorAll(".act").forEach(function (btn) {
+btn.addEventListener("click", function () {
+var card = btn.closest(".card");
+var id = card.getAttribute("data-id");
+var action = btn.getAttribute("data-action");
+if (action === "delete" && !confirm("Eliminar esta resena permanentemente?")) return;
+fetch("/.netlify/functions/admin-review-action", {
+method: "POST",
+headers: { "Content-Type": "application/json", "x-admin-key": key },
+body: JSON.stringify({ id: id, action: action }),
+}).then(function (r) {
+if (!r.ok) throw new Error("status " + r.status);
+loadReviews();
+}).catch(function () { alert("No se pudo actualizar la resena."); });
+});
+});
+}
+
+/* ---------------- media ---------------- */
+var mediaList = document.getElementById("mediaList");
+var mediaFileInput = document.getElementById("mediaFile");
+var mediaPreviewWrap = document.getElementById("mediaPreviewWrap");
+var mediaErr = document.getElementById("mediaErr");
+var mediaOk = document.getElementById("mediaOk");
+var mediaProgressWrap = document.getElementById("mediaProgressWrap");
+var mediaProgress = document.getElementById("mediaProgress");
+var mediaUploadBtn = document.getElementById("mediaUploadBtn");
+
+mediaFileInput.addEventListener("change", function () {
+mediaPreviewWrap.innerHTML = "";
+var f = mediaFileInput.files[0];
+if (!f) return;
+var url = URL.createObjectURL(f);
+if (f.type.indexOf("video") === 0) {
+mediaPreviewWrap.innerHTML = '<video src="' + url + '" controls style="max-width:100%;max-height:180px;margin-top:8px;border-radius:8px;"></video>';
+} else {
+mediaPreviewWrap.innerHTML = '<img src="' + url + '" style="max-width:100%;max-height:180px;margin-top:8px;border-radius:8px;" />';
+}
+});
+
+function loadMedia() {
+mediaList.textContent = "Cargando...";
+fetch("/.netlify/functions/list-media")
+.then(function (r) { return r.json(); })
+.then(renderMedia)
+.catch(function () { mediaList.textContent = "Error al cargar."; });
+}
+
+function renderMedia(items) {
+if (!items.length) { mediaList.innerHTML = "Todavia no hay contenido publicado."; return; }
+mediaList.innerHTML = items.map(function (it) {
+var el = it.tipo === "video"
+? '<video src="' + it.url + '" controls preload="none"></video>'
+: '<img src="' + it.url + '" loading="lazy" />';
+return '<div class="card" data-id="' + esc(it.id) + '">' + el +
+'<div class="meta"><span class="tag">' + esc(it.categoria) + '</span></div>' +
+'<div><strong>' + esc(it.titulo || "(sin titulo)") + '</strong></div>' +
+'<div class="row"><button class="danger mact" data-action="delete">Eliminar</button></div>' +
+'</div>';
+}).join("");
+mediaList.querySelectorAll(".mact").forEach(function (btn) {
+btn.addEventListener("click", function () {
+var card = btn.closest(".card");
+var id = card.getAttribute("data-id");
+if (!confirm("Eliminar este contenido permanentemente?")) return;
+fetch("/.netlify/functions/delete-media", {
+method: "POST",
+headers: { "Content-Type": "application/json", "x-admin-key": key },
+body: JSON.stringify({ id: id }),
+}).then(function (r) {
+if (!r.ok) throw new Error("status " + r.status);
+loadMedia();
+}).catch(function () { alert("No se pudo eliminar."); });
+});
+});
+}
+
+function fileToBase64Chunks(file, chunkSize) {
+return new Promise(function (resolve, reject) {
+var chunks = [];
+var offset = 0;
+var reader = new FileReader();
+function readNext() {
+var slice = file.slice(offset, offset + chunkSize);
+reader.readAsArrayBuffer(slice);
+}
+reader.onload = function () {
+var bytes = new Uint8Array(reader.result);
+var binary = "";
+for (var i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+chunks.push(btoa(binary));
+offset += chunkSize;
+if (offset < file.size) { readNext(); } else { resolve(chunks); }
+};
+reader.onerror = function () { reject(new Error("No se pudo leer el archivo.")); };
+readNext();
+});
+}
+
+mediaUploadBtn.addEventListener("click", function () {
+mediaErr.textContent = ""; mediaOk.textContent = "";
+var f = mediaFileInput.files[0];
+if (!f) { mediaErr.textContent = "Selecciona un archivo."; return; }
+var maxSize = 60 * 1024 * 1024;
+if (f.size > maxSize) { mediaErr.textContent = "El archivo es demasiado grande (maximo 60MB)."; return; }
+
+var tipo = f.type.indexOf("video") === 0 ? "video" : "photo";
+var titulo = document.getElementById("mediaTitulo").value;
+var descripcion = document.getElementById("mediaDescripcion").value;
+var categoria = document.getElementById("mediaCategoria").value;
+var id = Date.now() + "-" + Math.random().toString(36).slice(2, 8);
+var chunkSize = 4 * 1024 * 1024;
+
+mediaUploadBtn.disabled = true;
+mediaProgressWrap.classList.remove("hidden");
+mediaProgress.style.width = "0%";
+
+fileToBase64Chunks(f, chunkSize).then(function (chunks) {
+var total = chunks.length;
+var i = 0;
+function uploadNext() {
+if (i >= total) {
+return fetch("/.netlify/functions/finalize-media", {
+method: "POST",
+headers: { "Content-Type": "application/json", "x-admin-key": key },
+body: JSON.stringify({ id: id, totalChunks: total, tipo: tipo, categoria: categoria, titulo: titulo, descripcion: descripcion, contentType: f.type }),
+}).then(function (r) {
+if (!r.ok) throw new Error("status " + r.status);
+return r.json();
+});
+}
+return fetch("/.netlify/functions/upload-chunk", {
+method: "POST",
+headers: { "Content-Type": "application/json", "x-admin-key": key },
+body: JSON.stringify({ id: id, index: i, dataBase64: chunks[i] }),
+}).then(function (r) {
+if (!r.ok) throw new Error("status " + r.status);
+i++;
+mediaProgress.style.width = Math.round((i / total) * 100) + "%";
+return uploadNext();
+});
+}
+return uploadNext();
+}).then(function () {
+mediaOk.textContent = "Contenido publicado correctamente.";
+mediaFileInput.value = "";
+mediaPreviewWrap.innerHTML = "";
+document.getElementById("mediaTitulo").value = "";
+document.getElementById("mediaDescripcion").value = "";
+mediaUploadBtn.disabled = false;
+mediaProgressWrap.classList.add("hidden");
+loadMedia();
+}).catch(function (e) {
+mediaErr.textContent = "No se pudo subir el archivo: " + e.message;
+mediaUploadBtn.disabled = false;
+mediaProgressWrap.classList.add("hidden");
+});
+});
+})();
+</script>
+</body>
+</html>

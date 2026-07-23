@@ -109,7 +109,22 @@
    "Mobile detailing service in Houston and surrounding areas.":
      "Servicio de detallado móvil en Houston y áreas cercanas.",
    // social / contact (kept in English on purpose; see SLOGAN/INSTAGRAM_HANDLE)
- };
+ 
+  // reviews
+  "Loading reviews...": "Cargando resenas...",
+  "Share Your Experience": "Comparte tu Experiencia",
+  "Rating": "Calificacion",
+  "Your Review": "Tu Resena",
+  "Photo (optional)": "Foto (opcional)",
+  "Choose photo": "Elegir foto",
+  "Submit Review": "Enviar Resena",
+  "Be the first to leave a review!": "Se el primero en dejar una resena!",
+  "Reviews are unavailable right now.": "Las resenas no estan disponibles en este momento.",
+  "Please choose a rating.": "Por favor elige una calificacion.",
+  "Please write a comment.": "Por favor escribe un comentario.",
+  "Thank you! Your review will appear after approval.": "Gracias! Tu resena aparecera despues de ser aprobada.",
+  "We couldn't submit your review. Please try again.": "No se pudo enviar tu resena. Intenta de nuevo.",
+};
 
  function t(s) {
    return getLang() === "es" && ES[s] ? ES[s] : s;
@@ -271,7 +286,31 @@
    "[class*=\"hover:text-blue-brand\"]:hover{color:#139cd8 !important;}",
    "[class*=\"hover:border-blue-brand\"]:hover,[class*=\"focus:border-blue-brand\"]:focus{border-color:#139cd8 !important;}",
    "[class*=\"text-white\"][class*=\"md:hidden\"]{color:#202832 !important;}",
-   "[class*=\"hover:text-white\"]:not([class*=\"hover:bg-blue-brand\"]):hover{color:#139cd8 !important;}",].join("\n");
+   "[class*=\"hover:text-white\"]:not([class*=\"hover:bg-blue-brand\"]):hover{color:#139cd8 !important;}","#apex-reviews-wrap{max-width:1100px;margin:0 auto;}",
+".apex-rev-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-bottom:40px;}",
+".apex-rev-card{background:#fff;border:1px solid #d8dee3;border-radius:14px;padding:20px;box-shadow:0 2px 10px rgba(20,30,40,.05);}",
+".apex-rev-stars{color:#f5c518;letter-spacing:2px;margin-bottom:8px;font-size:15px;}",
+".apex-rev-name{font-weight:700;color:#202832;margin-bottom:6px;}",
+".apex-rev-comment{color:#4b5560;line-height:1.5;font-size:14px;}",
+".apex-rev-photo{width:100%;max-height:180px;object-fit:cover;border-radius:10px;margin-top:12px;}",
+".apex-rev-empty{text-align:center;color:#667079;padding:20px;grid-column:1/-1;}",
+"#apex-review-form-wrap{background:#fff;border:1px solid #d8dee3;border-radius:16px;padding:28px;max-width:640px;margin:0 auto;}",
+"#apex-review-form-wrap h3{color:#202832;margin-top:0;}",
+".apex-rf-row{margin-bottom:14px;}",
+".apex-rf-row label{display:block;font-size:13px;color:#667079;margin-bottom:6px;font-weight:600;}",
+".apex-rf-row input[type=\"text\"]{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #d8dee3;background:#eef1f4;color:#202832;font-family:inherit;font-size:14px;box-sizing:border-box;}",
+".apex-rf-row textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #d8dee3;background:#eef1f4;color:#202832;font-family:inherit;font-size:14px;box-sizing:border-box;min-height:90px;resize:vertical;}",
+".apex-rf-stars{display:flex;gap:6px;font-size:26px;cursor:pointer;}",
+".apex-rf-stars span{color:#d8dee3;transition:color .15s;}",
+".apex-rf-stars span.on{color:#f5c518;}",
+".apex-rf-file-btn{display:inline-block;padding:9px 16px;border-radius:999px;border:1px solid #d8dee3;background:#eef1f4;color:#4b5560;font-size:13px;cursor:pointer;}",
+".apex-rf-submit{background:#29b6f6;color:#fff;border:none;padding:12px 22px;border-radius:999px;font-weight:700;cursor:pointer;font-size:15px;}",
+".apex-rf-submit:hover{background:#139cd8;}",
+".apex-rf-submit:disabled{opacity:.6;cursor:default;}",
+".apex-rf-msg{margin-top:12px;font-size:14px;min-height:18px;}",
+".apex-rf-msg.err{color:#d64545;}",
+".apex-rf-msg.ok{color:#1ea672;}",
+].join("\n");
 
  function ensureStyle() {
    if (document.getElementById("apex-enhance-style")) return;
@@ -599,7 +638,191 @@
        else if (vid.webkitEnterFullscreen) vid.webkitEnterFullscreen();
      });
    });
+ 
+   loadDynamicMedia(sec);
  }
+
+ /* ------------------------------------------------------------ dynamic media */
+ function loadDynamicMedia(sec) {
+   fetch("/.netlify/functions/list-media").then(function (r) { return r.json(); }).then(function (items) {
+     if (!items || !items.length) return;
+     var grid = sec.querySelector("#apex-gallery");
+     if (!grid) return;
+     items.forEach(function (m) {
+       var div = document.createElement("div");
+       if (m.tipo === "video") {
+         div.className = "amg-item";
+         div.innerHTML =
+           '<span class="amg-badge">' + t("Video") + "</span>" +
+           '<video src="' + m.url + '" controls preload="none" playsinline muted></video>' +
+           '<button class="amg-expand amg-vid-full" type="button" aria-label="' + esc(t("Fullscreen")) + '" title="' + esc(t("Fullscreen")) + '">\u26F6</button>';
+       } else {
+         div.className = "amg-item amg-photo";
+         div.setAttribute("data-full", m.url);
+         div.innerHTML =
+           '<img src="' + m.url + '" alt="Apex Detailing" loading="lazy" />' +
+           '<button class="amg-expand" type="button" aria-label="' + esc(t("View fullscreen")) + '" title="' + esc(t("Fullscreen")) + '">\u26F6</button>';
+       }
+       grid.appendChild(div);
+       var imgEl = div.querySelector("img"), vidEl = div.querySelector("video");
+       if (imgEl) imgEl.addEventListener("error", function () { div.remove(); });
+       if (vidEl) vidEl.addEventListener("error", function () { div.remove(); }, true);
+       if (m.tipo === "video") {
+         var fbtn = div.querySelector(".amg-vid-full");
+         if (fbtn) fbtn.addEventListener("click", function (ev) {
+           ev.stopPropagation();
+           var vid = fbtn.previousElementSibling;
+           if (!vid) return;
+           if (vid.requestFullscreen) vid.requestFullscreen();
+           else if (vid.webkitRequestFullscreen) vid.webkitRequestFullscreen();
+           else if (vid.webkitEnterFullscreen) vid.webkitEnterFullscreen();
+         });
+       } else {
+         div.addEventListener("click", function () { openLightbox(div.getAttribute("data-full")); });
+       }
+     });
+   }).catch(function () {});
+ }
+
+ /* ------------------------------------------------------------------ reviews */
+ function injectReviews() {
+   var sec = document.getElementById("testimonios");
+   if (!sec || sec.getAttribute("data-apex-reviews") === "1") return;
+   ensureStyle();
+   sec.setAttribute("data-apex-reviews", "1");
+   sec.setAttribute("data-lang", getLang());
+   var headHTML =
+     '<h2 class="text-3xl md:text-4xl font-bold text-center mb-12">' +
+     hdr("What Our", "Clients Say", "Lo Que Dicen", "Nuestros Clientes", "text-blue-brand") +
+     "</h2>";
+   var starsHtml = [1, 2, 3, 4, 5].map(function (n) { return '<span data-n="' + n + '">\u2605</span>'; }).join("");
+   sec.innerHTML =
+     headHTML +
+     '<div id="apex-reviews-wrap">' +
+     '<div id="apex-rev-grid" class="apex-rev-grid"><div class="apex-rev-empty">' + esc(t("Loading reviews...")) + "</div></div>" +
+     '<div id="apex-review-form-wrap">' +
+     "<h3>" + esc(t("Share Your Experience")) + "</h3>" +
+     '<div class="apex-rf-row"><label>' + esc(t("Name")) + '</label><input type="text" id="apex-rf-name" maxlength="80" /></div>' +
+     '<div class="apex-rf-row"><label>' + esc(t("Rating")) + '</label><div class="apex-rf-stars" id="apex-rf-stars">' + starsHtml + "</div></div>" +
+     '<div class="apex-rf-row"><label>' + esc(t("Your Review")) + '</label><textarea id="apex-rf-comment" maxlength="1000"></textarea></div>' +
+     '<div class="apex-rf-row"><label>' + esc(t("Photo (optional)")) + '</label><label class="apex-rf-file-btn" for="apex-rf-photo">' + esc(t("Choose photo")) + "</label>" +
+     '<input type="file" accept="image/*" id="apex-rf-photo" style="display:none" /></div>' +
+     '<button class="apex-rf-submit" id="apex-rf-submit">' + esc(t("Submit Review")) + "</button>" +
+     '<div class="apex-rf-msg" id="apex-rf-msg"></div>' +
+     "</div></div>";
+
+   loadApprovedReviews();
+   wireReviewForm();
+ }
+
+ function loadApprovedReviews() {
+   var grid = document.getElementById("apex-rev-grid");
+   if (!grid) return;
+   fetch("/.netlify/functions/list-reviews-public")
+     .then(function (r) { return r.json(); })
+     .then(function (items) {
+       if (!document.getElementById("apex-rev-grid")) return;
+       if (!items || !items.length) {
+         grid.innerHTML = '<div class="apex-rev-empty">' + esc(t("Be the first to leave a review!")) + "</div>";
+         return;
+       }
+       grid.innerHTML = items.map(function (it) {
+         var starsStr = "";
+         for (var i = 1; i <= 5; i++) starsStr += i <= (it.calificacion || 0) ? "\u2605" : "\u2606";
+         var photo = it.foto ? '<img class="apex-rev-photo" src="' + it.foto + '" alt="" />' : "";
+         return (
+           '<div class="apex-rev-card">' +
+           '<div class="apex-rev-stars">' + starsStr + "</div>" +
+           '<div class="apex-rev-name">' + esc(it.nombre) + "</div>" +
+           '<div class="apex-rev-comment">' + esc(it.comentario) + "</div>" +
+           photo +
+           "</div>"
+         );
+       }).join("");
+     })
+     .catch(function () {
+       if (grid) grid.innerHTML = '<div class="apex-rev-empty">' + esc(t("Reviews are unavailable right now.")) + "</div>";
+     });
+ }
+
+ function compressReviewImage(file, maxDim, quality) {
+   return new Promise(function (resolve, reject) {
+     var img = new Image();
+     var reader = new FileReader();
+     reader.onload = function () {
+       img.onload = function () {
+         var w = img.width, h = img.height;
+         if (w > h && w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
+         else if (h >= w && h > maxDim) { w = Math.round((w * maxDim) / h); h = maxDim; }
+         var canvas = document.createElement("canvas");
+         canvas.width = w; canvas.height = h;
+         canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+         resolve(canvas.toDataURL("image/jpeg", quality));
+       };
+       img.onerror = function () { reject(new Error("bad image")); };
+       img.src = reader.result;
+     };
+     reader.onerror = function () { reject(new Error("read error")); };
+     reader.readAsDataURL(file);
+   });
+ }
+
+ function wireReviewForm() {
+   var starsWrap = document.getElementById("apex-rf-stars");
+   var rating = 0;
+   if (!starsWrap) return;
+   var starEls = starsWrap.querySelectorAll("span");
+   starEls.forEach(function (sp) {
+     sp.addEventListener("click", function () {
+       rating = parseInt(sp.getAttribute("data-n"), 10);
+       starEls.forEach(function (s2) {
+         if (parseInt(s2.getAttribute("data-n"), 10) <= rating) s2.classList.add("on");
+         else s2.classList.remove("on");
+       });
+     });
+   });
+
+   var submitBtn = document.getElementById("apex-rf-submit");
+   var msg = document.getElementById("apex-rf-msg");
+   submitBtn.addEventListener("click", function () {
+     msg.textContent = ""; msg.className = "apex-rf-msg";
+     var nameInput = document.getElementById("apex-rf-name");
+     var commentInput = document.getElementById("apex-rf-comment");
+     var fileInput = document.getElementById("apex-rf-photo");
+     var nombre = nameInput.value.trim();
+     var comentario = commentInput.value.trim();
+     if (!nombre) { msg.textContent = t("Please enter your name."); msg.className = "apex-rf-msg err"; return; }
+     if (!rating) { msg.textContent = t("Please choose a rating."); msg.className = "apex-rf-msg err"; return; }
+     if (!comentario) { msg.textContent = t("Please write a comment."); msg.className = "apex-rf-msg err"; return; }
+
+     submitBtn.disabled = true;
+     function finish(ok, text) {
+       submitBtn.disabled = false;
+       msg.textContent = text;
+       msg.className = "apex-rf-msg " + (ok ? "ok" : "err");
+       if (ok) {
+         nameInput.value = ""; commentInput.value = ""; fileInput.value = "";
+         rating = 0;
+         starEls.forEach(function (s2) { s2.classList.remove("on"); });
+       }
+     }
+     function send(foto) {
+       fetch("/.netlify/functions/submit-review", {
+         method: "POST",
+         headers: { "Content-Type": "application/json" },
+         body: JSON.stringify({ nombre: nombre, calificacion: rating, comentario: comentario, foto: foto || null }),
+       })
+         .then(function (r) { if (!r.ok) throw new Error("status " + r.status); finish(true, t("Thank you! Your review will appear after approval.")); })
+         .catch(function () { finish(false, t("We couldn't submit your review. Please try again.")); });
+     }
+     if (fileInput.files && fileInput.files[0]) {
+       compressReviewImage(fileInput.files[0], 1000, 0.75).then(send).catch(function () { send(null); });
+     } else {
+       send(null);
+     }
+   });
+ }
+
 
  /* ----------------------------------------------------------- image lightbox */
  var lb, lbImg, lbScale = 1, lbX = 0, lbY = 0;
@@ -1065,6 +1288,7 @@
  function apply() { fixLogoLink(); function fixLogoLink() { var a = document.querySelectorAll('a[href="#"]'); for (var i=0;i<a.length;i++){ if (a[i].querySelector('img[alt="Apex Detailing"]') && !a[i].getAttribute('data-apex-logo-fixed')) { a[i].setAttribute('href','/'); a[i].setAttribute('data-apex-logo-fixed','1'); } } }
    rewireHero();
    injectGallery();
+   injectReviews();
    addPriceNote();
    enhanceFooter();
    enhanceSocial();
@@ -1086,6 +1310,8 @@
       });
       var g = document.getElementById("galeria");
       if (g) g.removeAttribute("data-apex-gallery");
+      var rv = document.getElementById("testimonios");
+      if (rv) rv.removeAttribute("data-apex-reviews");
       var note = document.querySelector("#apex-pkgs .price-note");
       if (note) note.remove();
     }

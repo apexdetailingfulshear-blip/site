@@ -18,10 +18,8 @@
   var INSTAGRAM_HANDLE = "@Apex_Detailing_Fulshear";
 
  // Centralized social config. Instagram is the confirmed official handle.
- // Facebook reuses the confirmed link already present in the project.
  // Any network with no confirmed URL is left out entirely (no dead links).
  var SOCIAL = {
-   facebook: "https://www.facebook.com/ApexDetailing",
    instagram: "https://www.instagram.com/apex_detailing_fulshear/",
  };
   var CITY_BASE = "/areas/";
@@ -131,17 +129,16 @@
    '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
    '<path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"></path></svg>';
 
- var FB_SVG =
-   '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
-   '<path d="M22 12.06C22 6.48 17.52 2 11.94 2S1.88 6.48 1.88 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.42V9.91c0-2.39 1.42-3.71 3.6-3.71 1.04 0 2.13.19 2.13.19v2.35h-1.2c-1.18 0-1.55.73-1.55 1.48v1.78h2.64l-.42 2.91h-2.22V22c4.78-.76 8.44-4.92 8.44-9.94z"></path></svg>';
-
  var PHONE_SVG =
    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
    '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>';
 
+ var EMAIL_ADDR = "apexdetailingfulshear@gmail.com";
+ var EMAIL_SVG =
+   '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+   '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>';
+
  var GALLERY = [
-{ type: "drive", id: "1Wuzt1OHtPyBSe8pqM6HvBYW3UNWXonDO" },
-{ type: "drive", id: "1ZpBGBV-OI-GB9ozcrsAH9BJYVN-d7RM0" },
 { type: "video", src: "/assets/gallery/video-1.mp4", poster: "/assets/gallery/poster-1.jpg" },
 { type: "video", src: "/assets/gallery/video-2.mp4", poster: "/assets/gallery/poster-2.jpg" },
 { type: "video", src: "/assets/gallery/video-3.mp4", poster: "/assets/gallery/poster-3.jpg" },
@@ -157,40 +154,40 @@
  var CSS = [
    "#apex-modal-overlay{position:fixed;inset:0;background:rgba(3,6,15,.74);backdrop-filter:blur(4px);z-index:99999;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:32px 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}",
    "#apex-modal-overlay.open{display:flex;}",
-   "#apex-modal{position:relative;width:100%;max-width:520px;background:#3a3f43;border:1px solid #4b5257;border-radius:16px;padding:26px;color:#fff;box-shadow:0 24px 60px rgba(0,0,0,.5);animation:apexpop .18s ease;}",
+   "#apex-modal{position:relative;width:100%;max-width:520px;background:#ffffff;border:1px solid #d8dee3;border-radius:16px;padding:26px;color:#202832;box-shadow:0 24px 60px rgba(0,0,0,.5);animation:apexpop .18s ease;}",
    "@keyframes apexpop{from{opacity:0;transform:translateY(12px) scale(.98);}to{opacity:1;transform:none;}}",
    "#apex-modal h3{font-size:1.35rem;font-weight:700;margin:0 0 4px;}",
-   "#apex-modal .amx-sub{font-size:.85rem;color:#a8adb1;margin:0 0 16px;line-height:1.4;}",
+   "#apex-modal .amx-sub{font-size:.85rem;color:#667079;margin:0 0 16px;line-height:1.4;}",
    "#apex-modal .amx-pkg{display:inline-block;font-size:12px;font-weight:700;color:#29b6f6;background:rgba(41,182,246,.1);border:1px solid rgba(41,182,246,.25);border-radius:20px;padding:4px 12px;margin-bottom:6px;}",
-   "#apex-modal label{display:block;font-size:12px;color:#d4d8db;margin:14px 0 5px;font-weight:600;}",
+   "#apex-modal label{display:block;font-size:12px;color:#4b5560;margin:14px 0 5px;font-weight:600;}",
    "#apex-modal .amx-req{color:#29b6f6;}",
-   "#apex-modal input[type=text],#apex-modal input[type=tel],#apex-modal input[type=email],#apex-modal input[type=date],#apex-modal input[type=time],#apex-modal textarea{width:100%;box-sizing:border-box;background:#2b2f32;border:1px solid #54595d;border-radius:8px;padding:10px 12px;color:#fff;font-size:14px;font-family:inherit;transition:border-color .15s;}",
+   "#apex-modal input[type=text],#apex-modal input[type=tel],#apex-modal input[type=email],#apex-modal input[type=date],#apex-modal input[type=time],#apex-modal textarea{width:100%;box-sizing:border-box;background:#eef1f4;border:1px solid #d8dee3;border-radius:8px;padding:10px 12px;color:#202832;font-size:14px;font-family:inherit;transition:border-color .15s;}",
    "#apex-modal .amx-addons{font-size:12px;color:#29b6f6;background:rgba(41,182,246,.08);border:1px solid rgba(41,182,246,.2);border-radius:8px;padding:8px 10px;margin:-2px 0 4px;line-height:1.4;}",
    "#apex-modal input:focus,#apex-modal textarea:focus{outline:none;border-color:#29b6f6;}",
    "#apex-modal textarea{resize:vertical;min-height:58px;}",
-   "#apex-modal .amx-drop{border:1.5px dashed #585d61;border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;color:#a8adb1;font-size:13px;line-height:1.5;}",
-   "#apex-modal .amx-drop:hover,#apex-modal .amx-drop.drag{border-color:#29b6f6;background:rgba(41,182,246,.06);color:#d4d8db;}",
+   "#apex-modal .amx-drop{border:1.5px dashed #d8dee3;border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;color:#667079;font-size:13px;line-height:1.5;}",
+   "#apex-modal .amx-drop:hover,#apex-modal .amx-drop.drag{border-color:#29b6f6;background:rgba(41,182,246,.06);color:#4b5560;}",
    "#apex-modal .amx-drop strong{color:#29b6f6;}",
    "#apex-modal .amx-previews{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}",
-   "#apex-modal .amx-thumb{position:relative;width:60px;height:60px;border-radius:8px;overflow:hidden;border:1px solid #54595d;}",
+   "#apex-modal .amx-thumb{position:relative;width:60px;height:60px;border-radius:8px;overflow:hidden;border:1px solid #d8dee3;}",
    "#apex-modal .amx-thumb img{width:100%;height:100%;object-fit:cover;}",
-   "#apex-modal .amx-thumb button{position:absolute;top:-7px;right:-7px;background:#e05c5c;color:#fff;border-radius:50%;width:19px;height:19px;font-size:12px;line-height:1;text-align:center;cursor:pointer;border:2px solid #3a3f43;padding:0;}",
+   "#apex-modal .amx-thumb button{position:absolute;top:-7px;right:-7px;background:#e05c5c;color:#fff;border-radius:50%;width:19px;height:19px;font-size:12px;line-height:1;text-align:center;cursor:pointer;border:2px solid #ffffff;padding:0;}",
    "#apex-modal .amx-msg{font-size:12px;margin-top:10px;min-height:14px;}",
    "#apex-modal .amx-msg.err{color:#e05c5c;}",
    "#apex-modal .amx-msg.ok{color:#4ac76e;}",
    "#apex-modal .amx-actions{display:flex;gap:10px;margin-top:22px;}",
    "#apex-modal .amx-btn{flex:1;padding:12px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:opacity .15s,background .15s;font-family:inherit;}",
-   "#apex-modal .amx-cancel{background:transparent;border:1.5px solid #63686c;color:#fff;}",
-   "#apex-modal .amx-cancel:hover{background:#4b5257;}",
+   "#apex-modal .amx-cancel{background:transparent;border:1.5px solid #d8dee3;color:#202832;}",
+   "#apex-modal .amx-cancel:hover{background:#d8dee3;}",
    "#apex-modal .amx-submit{background:#29b6f6;color:#fff;}",
    "#apex-modal .amx-submit:hover{opacity:.9;}",
    "#apex-modal .amx-submit:disabled{opacity:.5;cursor:default;}",
-   "#apex-modal .amx-x{position:absolute;top:14px;right:16px;background:none;border:none;color:#a8adb1;font-size:22px;line-height:1;cursor:pointer;padding:4px;}",
-   "#apex-modal .amx-x:hover{color:#fff;}",
+   "#apex-modal .amx-x{position:absolute;top:14px;right:16px;background:none;border:none;color:#667079;font-size:22px;line-height:1;cursor:pointer;padding:4px;}",
+   "#apex-modal .amx-x:hover{color:#139cd8;}",
    "#apex-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}",
-   "#apex-gallery .amg-item{position:relative;border-radius:14px;overflow:hidden;border:1px solid #4b5257;background:#2b2f32;aspect-ratio:3/4;transition:transform .2s,border-color .2s;}",
+   "#apex-gallery .amg-item{position:relative;border-radius:14px;overflow:hidden;border:1px solid #d8dee3;background:#eef1f4;aspect-ratio:3/4;transition:transform .2s,border-color .2s;}",
    "#apex-gallery .amg-item:hover{transform:translateY(-4px);border-color:#29b6f6;}",
-   "#apex-gallery .amg-item video,#apex-gallery .amg-item img,#apex-gallery .amg-item iframe{width:100%;height:100%;object-fit:cover;display:block;background:#2b2f32;border:0;}",
+   "#apex-gallery .amg-item video,#apex-gallery .amg-item img,#apex-gallery .amg-item iframe{width:100%;height:100%;object-fit:cover;display:block;background:#eef1f4;border:0;}",
    "#apex-gallery .amg-badge{position:absolute;top:8px;left:8px;background:rgba(10,17,32,.8);color:#fff;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:6px;pointer-events:none;}",
    "#apex-pkgs .price-note{text-align:center;font-size:12px;color:#29b6f6;background:rgba(41,182,246,.06);border:1px solid rgba(41,182,246,.15);border-radius:8px;padding:9px 12px;max-width:640px;margin:-32px auto 40px;}",
    "#apex-gallery .amg-item.amg-photo{cursor:zoom-in;}",
@@ -206,75 +203,75 @@
    ".apex-lb-ctrls{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:2;}",
    ".apex-lb-ctrls button{background:rgba(255,255,255,.13);border:none;color:#fff;width:46px;height:46px;border-radius:50%;font-size:22px;cursor:pointer;line-height:1;}",
    ".apex-lb-ctrls button:hover{background:rgba(255,255,255,.26);}",
-   ".apex-lb-hint{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);color:#a8adb1;font-size:12px;z-index:2;white-space:nowrap;}",
+   ".apex-lb-hint{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);color:#667079;font-size:12px;z-index:2;white-space:nowrap;}",
    ".apex-city-link{color:#29b6f6 !important;text-decoration:none;transition:color .15s;}",
-   ".apex-city-link:hover{text-decoration:underline;color:#5cd0ff !important;}",
-   ".apex-city-sep{color:#6b7075;margin:0 2px;}",
-   ".apex-hours{color:#a8adb1;font-size:13px;margin-top:6px;}",
-   ".apex-hours strong{color:#fff;}",
+   ".apex-city-link:hover{text-decoration:underline;color:#139cd8 !important;}",
+   ".apex-city-sep{color:#838c94;margin:0 2px;}",
+   ".apex-hours{color:#667079;font-size:13px;margin-top:6px;}",
+   ".apex-hours strong{color:#202832;}",
    ".apex-quote-msg{margin-top:10px;font-size:13px;}",
    "@media (max-width:600px){#apex-modal{padding:20px;}#apex-gallery{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}.apex-lb-hint{display:none;}}",
-   ".apex-tagline{background:linear-gradient(135deg,#2e3337 0%,#3d4348 55%,#2e3337 100%);padding:64px 20px;text-align:center;border-top:1px solid #4b5257;border-bottom:1px solid #4b5257;}",
+   ".apex-tagline{background:linear-gradient(135deg,#eef1f4 0%,#ffffff 55%,#eef1f4 100%);padding:64px 20px;text-align:center;border-top:1px solid #d8dee3;border-bottom:1px solid #d8dee3;}",
    ".apex-tagline-inner{max-width:820px;margin:0 auto;}",
    ".apex-tagline-kicker{color:#29b6f6;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;}",
-   ".apex-tagline-main{color:#fff;font-size:clamp(22px,4vw,38px);font-weight:800;line-height:1.25;text-transform:uppercase;letter-spacing:.5px;margin:0;}",
+   ".apex-tagline-main{color:#202832;font-size:clamp(22px,4vw,38px);font-weight:800;line-height:1.25;text-transform:uppercase;letter-spacing:.5px;margin:0;}",
    ".apex-tagline-main span{color:#29b6f6;}",
    ".apex-tagline-divider{width:60px;height:3px;background:#29b6f6;margin:24px auto;border-radius:2px;}",
-   ".apex-tagline-sub{color:#d4d8db;font-size:18px;font-style:italic;font-weight:500;letter-spacing:.5px;margin:0;}",
-   ".apex-hiw{background:#2e3337;padding:80px 16px;}",
+   ".apex-tagline-sub{color:#4b5560;font-size:18px;font-style:italic;font-weight:500;letter-spacing:.5px;margin:0;}",
+   ".apex-hiw{background:#eef1f4;padding:80px 16px;}",
    ".apex-hiw-inner{max-width:1100px;margin:0 auto;text-align:center;}",
-   ".apex-hiw-title{font-size:2rem;font-weight:800;color:#fff;margin-bottom:44px;}",
+   ".apex-hiw-title{font-size:2rem;font-weight:800;color:#202832;margin-bottom:44px;}",
    ".apex-hiw-title span{color:#29b6f6;}",
    ".apex-hiw-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px;text-align:left;}",
-   ".apex-hiw-step{background:#3a3f43;border:1px solid #4b5257;border-radius:14px;padding:26px;}",
+   ".apex-hiw-step{background:#ffffff;border:1px solid #d8dee3;border-radius:14px;padding:26px;}",
    ".apex-hiw-num{width:40px;height:40px;border-radius:50%;background:#29b6f6;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:16px;}",
-   ".apex-hiw-step h3{color:#fff;font-size:1.1rem;font-weight:700;margin-bottom:8px;}",
-   ".apex-hiw-step p{color:#a8adb1;font-size:14px;line-height:1.5;margin:0;}",
-   ".apex-areas{background:#33383c;padding:80px 16px;}",
+   ".apex-hiw-step h3{color:#202832;font-size:1.1rem;font-weight:700;margin-bottom:8px;}",
+   ".apex-hiw-step p{color:#667079;font-size:14px;line-height:1.5;margin:0;}",
+   ".apex-areas{background:#eef1f4;padding:80px 16px;}",
    ".apex-areas-inner{max-width:1100px;margin:0 auto;text-align:center;}",
-   ".apex-areas-title{font-size:2rem;font-weight:800;color:#fff;margin-bottom:10px;}",
+   ".apex-areas-title{font-size:2rem;font-weight:800;color:#202832;margin-bottom:10px;}",
    ".apex-areas-title span{color:#29b6f6;}",
-   ".apex-areas-sub{color:#a8adb1;margin-bottom:40px;}",
+   ".apex-areas-sub{color:#667079;margin-bottom:40px;}",
    ".apex-areas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px;}",
-   ".apex-area-card{position:relative;height:160px;border-radius:14px;background-size:cover;background-position:center;overflow:hidden;border:1px solid #4b5257;transition:transform .2s ease;}",
+   ".apex-area-card{position:relative;height:160px;border-radius:14px;background-size:cover;background-position:center;overflow:hidden;border:1px solid #d8dee3;transition:transform .2s ease;}",
    ".apex-area-card:hover{transform:translateY(-4px);}",
    ".apex-area-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,7,12,.15),rgba(5,7,12,.85));display:flex;align-items:flex-end;justify-content:center;padding-bottom:16px;}",
    ".apex-area-overlay span{color:#fff;font-weight:700;font-size:16px;letter-spacing:.3px;}",
    "html{scroll-behavior:smooth;}",
    "#servicios,#paquetes,#nosotros,#galeria,#testimonios,#contacto,.pkg-card,[id^='card-']{scroll-margin-top:88px;}",
-   ".apex-header-ig{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;color:#d4d8db;background:transparent;border:1px solid transparent;transition:color .15s,border-color .15s;margin-right:6px;}",
-   ".apex-header-ig:hover,.apex-header-ig:focus-visible{color:#29b6f6;border-color:#585d61;outline:none;}",
+   ".apex-header-ig{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;color:#4b5560;background:transparent;border:1px solid transparent;transition:color .15s,border-color .15s;margin-right:6px;}",
+   ".apex-header-ig:hover,.apex-header-ig:focus-visible{color:#29b6f6;border-color:#d8dee3;outline:none;}",
    ".apex-contact-links{display:flex;flex-direction:column;gap:10px;margin-bottom:22px;}",
-   ".apex-contact-link{display:inline-flex;align-items:center;gap:8px;color:#d4d8db;text-decoration:none;font-size:14px;transition:color .15s;}",
+   ".apex-contact-link{display:inline-flex;align-items:center;gap:8px;color:#4b5560;text-decoration:none;font-size:14px;transition:color .15s;}",
    ".apex-contact-link:hover,.apex-contact-link:focus-visible{color:#29b6f6;outline:none;}",
-   ".apex-follow{background:#2e3337;padding:64px 16px;border-top:1px solid #4b5257;text-align:center;}",
+   ".apex-follow{background:#eef1f4;padding:64px 16px;border-top:1px solid #d8dee3;text-align:center;}",
    ".apex-follow-inner{max-width:640px;margin:0 auto;}",
-   ".apex-follow-inner h2{color:#fff;font-size:1.7rem;font-weight:800;margin-bottom:10px;}",
-   ".apex-follow-inner p{color:#a8adb1;font-size:14px;margin-bottom:26px;}",
+   ".apex-follow-inner h2{color:#202832;font-size:1.7rem;font-weight:800;margin-bottom:10px;}",
+   ".apex-follow-inner p{color:#667079;font-size:14px;margin-bottom:26px;}",
    ".apex-follow-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;}",
    ".apex-follow-btn{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;transition:opacity .15s,transform .15s;}",
    ".apex-follow-btn:hover{opacity:.88;transform:translateY(-2px);}",
    ".apex-follow-btn:focus-visible{outline:2px solid #29b6f6;outline-offset:2px;}",
    ".apex-follow-btn.ig{background:linear-gradient(135deg,#29b6f6,#8b5cf6);color:#fff;}",
-   ".apex-follow-btn.fb{background:#1877f2;color:#fff;}",
    "@media (max-width:600px){.apex-hiw-title,.apex-areas-title{font-size:1.6rem;}}",
-      "/* ===== Global site-wide theme: cement gray + sky blue + white (Tailwind overrides) ===== */",
-   "body,#root,#root>div{background-color:#3d4348 !important;}",
-   "[class*=\"bg-black\"]{background-color:#2e3337 !important;}",
-   "[class*=\"bg-gray-950\"]{background-color:#2e3337 !important;}",
-   "[class*=\"bg-gray-900\"]{background-color:#3d4348 !important;}",
-   "section[class*=\"bg-gradient-to-b\"],div[class*=\"bg-gradient-to-b\"]{background-image:linear-gradient(180deg,#3d4348 0%,#2e3337 100%) !important;}",
-   "[class*=\"border-gray-600\"],[class*=\"border-gray-700\"],[class*=\"border-gray-800\"]{border-color:#4b5257 !important;}",
-   "[class*=\"text-gray-300\"],[class*=\"text-gray-400\"]{color:#c7ccd1 !important;}",
-   "[class*=\"text-gray-500\"]{color:#a8adb1 !important;}",
-   "[class*=\"text-gray-600\"]{color:#9aa0a5 !important;}",
+      "/* ===== Global site-wide theme: light gray + sky blue + white ===== */",
+   "body,#root,#root>div{background-color:#eef1f4 !important;color:#202832 !important;}",
+   "[class*=\"bg-black\"]{background-color:#ffffff !important;}",
+   "[class*=\"bg-gray-950\"]{background-color:#ffffff !important;}",
+   "[class*=\"bg-gray-900\"]{background-color:#eef1f4 !important;}",
+   "section[class*=\"bg-gradient-to-b\"],div[class*=\"bg-gradient-to-b\"]{background-image:linear-gradient(180deg,#ffffff 0%,#eef1f4 100%) !important;}",
+   "[class*=\"border-gray-600\"],[class*=\"border-gray-700\"],[class*=\"border-gray-800\"]{border-color:#d8dee3 !important;}",
+   "[class*=\"text-gray-300\"],[class*=\"text-gray-400\"]{color:#4b5560 !important;}",
+   "[class*=\"text-gray-500\"]{color:#667079 !important;}",
+   "[class*=\"text-gray-600\"]{color:#838c94 !important;}",
    ".bg-blue-brand{background-color:#29b6f6 !important;}",
    ".text-blue-brand{color:#29b6f6 !important;}",
    ".border-blue-brand{border-color:#29b6f6 !important;}",
    "[class*=\"hover:bg-blue-700\"]:hover,[class*=\"hover:bg-blue-brand\"]:hover{background-color:#139cd8 !important;}",
    "[class*=\"hover:text-blue-brand\"]:hover{color:#139cd8 !important;}",
    "[class*=\"hover:border-blue-brand\"]:hover,[class*=\"focus:border-blue-brand\"]:focus{border-color:#139cd8 !important;}",
-].join("\n");
+   "[class*=\"text-white\"][class*=\"md:hidden\"]{color:#202832 !important;}",
+   "[class*=\"hover:text-white\"]:not([class*=\"hover:bg-blue-brand\"]):hover{color:#139cd8 !important;}",].join("\n");
 
  function ensureStyle() {
    if (document.getElementById("apex-enhance-style")) return;
@@ -722,7 +719,7 @@
    var candidates = [].slice.call(socialRow.querySelectorAll("a")).filter(function (a) {
      return a.getAttribute("data-apex-social") !== "1";
    });
-   var order = ["facebook", "instagram"];
+   var order = ["instagram"];
    candidates.forEach(function (a, i) {
      a.setAttribute("data-apex-social", "1");
      var key = order[i];
@@ -730,7 +727,7 @@
      a.setAttribute("href", SOCIAL[key]);
      a.setAttribute("target", "_blank");
      a.setAttribute("rel", "noopener noreferrer");
-     a.setAttribute("aria-label", key === "instagram" ? "Visit Apex Detailing on Instagram" : "Visit Apex Detailing on Facebook");
+     a.setAttribute("aria-label", "Visit Apex Detailing on Instagram");
    });
 
   // Cities -> links (only once; city names don't translate).
@@ -764,6 +761,24 @@
      telA.style.alignItems = "center";
      telA.style.justifyContent = "center";
    }
+
+  // Email: add a mailto link next to phone (only once).
+  if (!footer.querySelector(".apex-email-link")) {
+    var emailA = document.createElement("a");
+    emailA.href = "mailto:" + EMAIL_ADDR;
+    emailA.className = "apex-email-link";
+    emailA.setAttribute("aria-label", "Email Apex Detailing");
+    emailA.innerHTML = EMAIL_SVG + '<span style="margin-left:6px;">' + EMAIL_ADDR + "</span>";
+    emailA.style.display = "inline-flex";
+    emailA.style.alignItems = "center";
+    emailA.style.justifyContent = "center";
+    emailA.style.color = "inherit";
+    if (telA && telA.parentNode) {
+      telA.parentNode.insertBefore(emailA, telA.nextSibling);
+    } else {
+      footer.appendChild(emailA);
+    }
+  }
 
   // Dynamic copyright year (no hardcoded year).
   var copyP = [].slice.call(footer.querySelectorAll("p")).find(function (p) {
@@ -853,6 +868,7 @@
        (telHref
         ? '<a href="' + telHref + '" class="apex-contact-link" aria-label="Call Apex Detailing">' + PHONE_SVG + "<span>" + esc(telNum) + "</span></a>"
         : "") +
+       '<a href="mailto:' + EMAIL_ADDR + '" class="apex-contact-link" aria-label="Email Apex Detailing">' + EMAIL_SVG + "<span>" + esc(EMAIL_ADDR) + "</span></a>" +
        '<a href="' + SOCIAL.instagram + '" target="_blank" rel="noopener noreferrer" class="apex-contact-link" aria-label="Visit Apex Detailing on Instagram">' +
        IG_SVG + "<span>Follow us on Instagram " + esc(INSTAGRAM_HANDLE) + "</span></a>";
      contact.insertBefore(box, contact.firstChild);
@@ -874,9 +890,6 @@
      '<div class="apex-follow-btns">' +
      '<a class="apex-follow-btn ig" href="' + SOCIAL.instagram + '" target="_blank" rel="noopener noreferrer" aria-label="Visit Apex Detailing on Instagram">' +
      IG_SVG + "<span>Follow " + esc(INSTAGRAM_HANDLE) + "</span></a>" +
-     (SOCIAL.facebook
-      ? '<a class="apex-follow-btn fb" href="' + SOCIAL.facebook + '" target="_blank" rel="noopener noreferrer" aria-label="Visit Apex Detailing on Facebook">' + FB_SVG + "<span>Follow Us on Facebook</span></a>"
-      : "") +
      "</div></div>";
    footer.parentNode.insertBefore(sec, footer);
  }
@@ -886,7 +899,7 @@
    var m = form.querySelector(".apex-quote-msg");
    if (!m) { m = document.createElement("p"); m.className = "apex-quote-msg"; form.appendChild(m); }
    m.textContent = text;
-   m.style.color = kind === "err" ? "#e05c5c" : kind === "ok" ? "#4ac76e" : "#a8adb1";
+   m.style.color = kind === "err" ? "#e05c5c" : kind === "ok" ? "#4ac76e" : "#667079";
  }
 
  function wireQuote() {

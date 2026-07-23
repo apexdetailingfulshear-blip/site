@@ -719,12 +719,11 @@
    var candidates = [].slice.call(socialRow.querySelectorAll("a")).filter(function (a) {
      return a.getAttribute("data-apex-social") !== "1";
    });
-   var order = ["instagram"];
-   candidates.forEach(function (a, i) {
+   candidates.forEach(function (a) {
      a.setAttribute("data-apex-social", "1");
-     var key = order[i];
-     if (!key || !SOCIAL[key]) { a.remove(); return; }
-     a.setAttribute("href", SOCIAL[key]);
+     var isInstagram = /M12 2\.163/.test(a.innerHTML);
+     if (!isInstagram) { a.remove(); return; }
+     a.setAttribute("href", SOCIAL.instagram);
      a.setAttribute("target", "_blank");
      a.setAttribute("rel", "noopener noreferrer");
      a.setAttribute("aria-label", "Visit Apex Detailing on Instagram");

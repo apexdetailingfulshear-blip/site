@@ -1,11 +1,7 @@
 const { getStore } = require("@netlify/blobs");
 
 function reservasStore() {
-    return getStore({
-          name: "reservas",
-          siteID: process.env.SITE_ID,
-          token: process.env.NETLIFY_API_TOKEN,
-    });
+    return getStore({ name: "reservas" });
 }
 
 exports.handler = async function (event) {

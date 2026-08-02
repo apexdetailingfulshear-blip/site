@@ -1,11 +1,7 @@
 const { getStore } = require("@netlify/blobs");
 
 function metaStore() {
-  return getStore({
-    name: "media-meta",
-    siteID: process.env.SITE_ID,
-    token: process.env.NETLIFY_API_TOKEN,
-  });
+  return getStore({ name: "media-meta" });
 }
 
 var CATEGORIAS = [

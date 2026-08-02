@@ -1,11 +1,7 @@
 const { getStore } = require("@netlify/blobs");
 
 function filesStore() {
-  return getStore({
-    name: "media-files",
-    siteID: process.env.SITE_ID,
-    token: process.env.NETLIFY_API_TOKEN,
-  });
+  return getStore({ name: "media-files" });
 }
 
 exports.handler = async function (event) {

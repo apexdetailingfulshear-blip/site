@@ -1,11 +1,7 @@
 const { getStore } = require("@netlify/blobs");
 
 function chunksStore() {
-  return getStore({
-    name: "media-chunks",
-    siteID: process.env.SITE_ID,
-    token: process.env.NETLIFY_API_TOKEN,
-  });
+  return getStore({ name: "media-chunks" });
 }
 
 exports.handler = async function (event) {

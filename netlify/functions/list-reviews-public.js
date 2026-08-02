@@ -1,5 +1,5 @@
 const { getBlobStore } = require("./_blob-store");
-const { ensureReviewsSeeded, SEED_MARKER } = require("./_reviews-seed");
+const { ensureReviewsSeeded } = require("./_reviews-seed");
 
 function reviewsStore() {
   return getBlobStore("reviews");
@@ -8,21 +8,16 @@ function reviewsStore() {
 exports.handler = async function () {
   try {
     const store = reviewsStore();
-    const justSeeded = await ensureReviewsSeeded(store);
+    const staticItems = (await ensureReviewsSeeded(store)).filter(function (r) { return r.estado === "aprobada"; });
+    const seenIds = new Set(staticItems.map(function (r) { return r.id; }));
+    const items = staticItems.slice();
     const { blobs } = await store.list();
-    const items = [];
-    const seenIds = new Set();
     for (const b of blobs) {
-      if (b.key === SEED_MARKER) continue;
+      if (seenIds.has(b.key)) continue;
       const rec = await store.get(b.key, { type: "json" });
       if (rec && rec.estado === "aprobada") {
         items.push(rec);
         seenIds.add(rec.id);
-      }
-    }
-    if (justSeeded) {
-      for (const rec of justSeeded) {
-        if (!seenIds.has(rec.id) && rec.estado === "aprobada") items.push(rec);
       }
     }
     items.sort(function (a, b2) {

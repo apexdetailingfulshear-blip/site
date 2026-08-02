@@ -4,7 +4,6 @@ function metaStore() {
   return getBlobStore("media-meta");
 }
 
-var SEED_MARKER = "__seed_v1__";
 var STATIC_GALLERY = [
   { type: "video", src: "/assets/gallery/video-1.mp4" },
   { type: "video", src: "/assets/gallery/video-2.mp4" },
@@ -21,15 +20,10 @@ var STATIC_GALLERY = [
   { type: "image", src: "/assets/gallery/photo-8.jpg" },
 ];
 
-async function ensureSeeded(store) {
-  var marker = await store.get(SEED_MARKER, { type: "json" }).catch(function () { return null; });
-  if (marker) return null;
-  var seeded = [];
-  for (var i = 0; i < STATIC_GALLERY.length; i++) {
-    var g = STATIC_GALLERY[i];
-    var id = "static-" + (i + 1);
-    var rec = {
-      id: id,
+function staticMediaRecords() {
+  return STATIC_GALLERY.map(function (g, i) {
+    return {
+      id: "static-" + (i + 1),
       tipo: g.type === "video" ? "video" : "photo",
       categoria: "Full Detail",
       titulo: "",
@@ -40,32 +34,41 @@ async function ensureSeeded(store) {
       static: true,
       url: g.src,
     };
-    await store.setJSON(id, rec);
-    seeded.push(rec);
+  });
+}
+
+// Self-healing: checks each expected static item directly by key (strongly
+// consistent) and (re)writes any that are missing. Does not rely on list().
+async function ensureSeeded(store) {
+  var expected = staticMediaRecords();
+  var result = [];
+  for (var i = 0; i < expected.length; i++) {
+    var rec = expected[i];
+    var existing = await store.get(rec.id, { type: "json" }).catch(function () { return null; });
+    if (!existing) {
+      await store.setJSON(rec.id, rec);
+      result.push(rec);
+    } else {
+      result.push(existing);
+    }
   }
-  await store.setJSON(SEED_MARKER, { done: true, at: new Date().toISOString() });
-  return seeded;
+  return result;
 }
 
 exports.handler = async function () {
   try {
     const store = metaStore();
-    const justSeeded = await ensureSeeded(store);
+    const staticItems = await ensureSeeded(store);
+    const seenIds = new Set(staticItems.map(function (r) { return r.id; }));
+    const items = staticItems.slice();
     const { blobs } = await store.list();
-    const items = [];
-    const seenIds = new Set();
     for (const b of blobs) {
-      if (b.key === SEED_MARKER) continue;
+      if (seenIds.has(b.key)) continue;
       const rec = await store.get(b.key, { type: "json" });
       if (rec) {
-        if (!rec.static) rec.url = "/.netlify/functions/media-file?id=" + encodeURIComponent(rec.id);
+        rec.url = "/.netlify/functions/media-file?id=" + encodeURIComponent(rec.id);
         items.push(rec);
         seenIds.add(rec.id);
-      }
-    }
-    if (justSeeded) {
-      for (const rec of justSeeded) {
-        if (!seenIds.has(rec.id)) items.push(rec);
       }
     }
     items.sort(function (a, b2) {

@@ -1,7 +1,7 @@
-const { getStore } = require("@netlify/blobs");
+const { getBlobStore } = require("./_blob-store");
 
 function reviewsStore() {
-  return getStore({ name: "reviews", siteID: process.env.NETLIFY_SITE_ID, token: process.env.NETLIFY_API_TOKEN });
+  return getBlobStore("reviews");
 }
 
 exports.handler = async function () {

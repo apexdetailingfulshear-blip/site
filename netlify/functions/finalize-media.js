@@ -1,13 +1,13 @@
-const { getStore } = require("@netlify/blobs");
+const { getBlobStore } = require("./_blob-store");
 
 function chunksStore() {
-  return getStore({ name: "media-chunks", siteID: process.env.NETLIFY_SITE_ID, token: process.env.NETLIFY_API_TOKEN });
+  return getBlobStore("media-chunks");
 }
 function filesStore() {
-  return getStore({ name: "media-files", siteID: process.env.NETLIFY_SITE_ID, token: process.env.NETLIFY_API_TOKEN });
+  return getBlobStore("media-files");
 }
 function metaStore() {
-  return getStore({ name: "media-meta", siteID: process.env.NETLIFY_SITE_ID, token: process.env.NETLIFY_API_TOKEN });
+  return getBlobStore("media-meta");
 }
 
 var CATEGORIAS = [

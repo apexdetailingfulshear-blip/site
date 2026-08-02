@@ -1,4 +1,4 @@
-const { getBlobStore } = require("./_blob-store");
+const { getBlobStore } = require("./lib/blob-store");
 
 function metaStore() {
   return getBlobStore("media-meta");

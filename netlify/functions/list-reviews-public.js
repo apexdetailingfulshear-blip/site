@@ -1,5 +1,5 @@
-const { getBlobStore } = require("./_blob-store");
-const { ensureReviewsSeeded } = require("./_reviews-seed");
+const { getBlobStore } = require("./lib/blob-store");
+const { ensureReviewsSeeded } = require("./lib/reviews-seed");
 
 function reviewsStore() {
   return getBlobStore("reviews");

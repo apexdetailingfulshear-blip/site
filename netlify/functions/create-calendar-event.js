@@ -154,17 +154,25 @@ exports.handler = async function (event) {
     const client = getClient();
     await client.authorize();
 
+    const attendees = [{ email: CALENDAR_ID }];
+    const customerEmail = (data.correo || "").trim();
+    if (customerEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
+      attendees.push({ email: customerEmail });
+    }
+
     const res = await client.request({
       url:
         "https://www.googleapis.com/calendar/v3/calendars/" +
         encodeURIComponent(CALENDAR_ID) +
-        "/events",
+        "/events?sendUpdates=all",
       method: "POST",
       data: {
         summary: summary,
         description: descLines.join("\n"),
         start: start,
         end: end,
+        attendees: attendees,
+        guestsCanModify: false,
       },
     });
 

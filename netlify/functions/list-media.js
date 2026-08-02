@@ -1,7 +1,7 @@
 const { getStore } = require("@netlify/blobs");
 
 function metaStore() {
-  return getStore({ name: "media-meta" });
+  return getStore({ name: "media-meta", siteID: process.env.NETLIFY_SITE_ID, token: process.env.NETLIFY_API_TOKEN });
 }
 
 exports.handler = async function () {

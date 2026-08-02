@@ -23,7 +23,8 @@ var STATIC_GALLERY = [
 
 async function ensureSeeded(store) {
   var marker = await store.get(SEED_MARKER, { type: "json" }).catch(function () { return null; });
-  if (marker) return;
+  if (marker) return null;
+  var seeded = [];
   for (var i = 0; i < STATIC_GALLERY.length; i++) {
     var g = STATIC_GALLERY[i];
     var id = "static-" + (i + 1);
@@ -40,22 +41,31 @@ async function ensureSeeded(store) {
       url: g.src,
     };
     await store.setJSON(id, rec);
+    seeded.push(rec);
   }
   await store.setJSON(SEED_MARKER, { done: true, at: new Date().toISOString() });
+  return seeded;
 }
 
 exports.handler = async function () {
   try {
     const store = metaStore();
-    await ensureSeeded(store);
+    const justSeeded = await ensureSeeded(store);
     const { blobs } = await store.list();
     const items = [];
+    const seenIds = new Set();
     for (const b of blobs) {
       if (b.key === SEED_MARKER) continue;
       const rec = await store.get(b.key, { type: "json" });
       if (rec) {
         if (!rec.static) rec.url = "/.netlify/functions/media-file?id=" + encodeURIComponent(rec.id);
         items.push(rec);
+        seenIds.add(rec.id);
+      }
+    }
+    if (justSeeded) {
+      for (const rec of justSeeded) {
+        if (!seenIds.has(rec.id)) items.push(rec);
       }
     }
     items.sort(function (a, b2) {

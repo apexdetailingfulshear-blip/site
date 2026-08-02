@@ -8,14 +8,21 @@ function reviewsStore() {
 exports.handler = async function () {
   try {
     const store = reviewsStore();
-    await ensureReviewsSeeded(store);
+    const justSeeded = await ensureReviewsSeeded(store);
     const { blobs } = await store.list();
     const items = [];
+    const seenIds = new Set();
     for (const b of blobs) {
       if (b.key === SEED_MARKER) continue;
       const rec = await store.get(b.key, { type: "json" });
       if (rec && rec.estado === "aprobada") {
         items.push(rec);
+        seenIds.add(rec.id);
+      }
+    }
+    if (justSeeded) {
+      for (const rec of justSeeded) {
+        if (!seenIds.has(rec.id) && rec.estado === "aprobada") items.push(rec);
       }
     }
     items.sort(function (a, b2) {

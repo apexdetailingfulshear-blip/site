@@ -16,7 +16,8 @@ var SEED_REVIEWS = [
 
 async function ensureReviewsSeeded(store) {
   var marker = await store.get(SEED_MARKER, { type: "json" }).catch(function () { return null; });
-  if (marker) return;
+  if (marker) return null;
+  var seeded = [];
   for (var i = 0; i < SEED_REVIEWS.length; i++) {
     var r = SEED_REVIEWS[i];
     var id = "static-review-" + (i + 1);
@@ -31,8 +32,10 @@ async function ensureReviewsSeeded(store) {
       static: true,
     };
     await store.setJSON(id, rec);
+    seeded.push(rec);
   }
   await store.setJSON(SEED_MARKER, { done: true, at: new Date().toISOString() });
+  return seeded;
 }
 
 module.exports = { ensureReviewsSeeded: ensureReviewsSeeded, SEED_MARKER: SEED_MARKER };

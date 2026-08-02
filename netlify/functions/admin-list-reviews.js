@@ -1,4 +1,5 @@
 const { getBlobStore } = require("./_blob-store");
+const { ensureReviewsSeeded, SEED_MARKER } = require("./_reviews-seed");
 
 function reviewsStore() {
   return getBlobStore("reviews");
@@ -13,9 +14,11 @@ exports.handler = async function (event) {
 
   try {
     const store = reviewsStore();
+    await ensureReviewsSeeded(store);
     const { blobs } = await store.list();
     const items = [];
     for (const b of blobs) {
+      if (b.key === SEED_MARKER) continue;
       try {
         const rec = await store.get(b.key, { type: "json" });
         if (rec) items.push(rec);

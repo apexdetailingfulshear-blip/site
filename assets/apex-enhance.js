@@ -612,26 +612,7 @@
      '<h2 class="text-3xl md:text-4xl font-bold text-center mb-12">' +
      hdr("Our", "Gallery", "Nuestra", "Galería", "text-blue-brand") +
      "</h2>";
-   var items = GALLERY.map(function (m) {
-     if (m.type === "drive") {
-     return (
-     '<div class="amg-item amg-drive"><span class="amg-badge">' + t("Video") + "</span>" +
-     '<iframe src="https://drive.google.com/file/d/' + m.id + '/preview" allow="autoplay" loading="lazy" frameborder="0"></iframe></div>'
-     );
-     }
-     if (m.type === "video") {
-       return (
-         '<div class="amg-item"><span class="amg-badge">' + t("Video") + "</span>" +
-         '<video src="' + m.src + '" poster="' + m.poster + '" controls preload="none" playsinline muted></video>' +
-         '<button class="amg-expand amg-vid-full" type="button" aria-label="' + esc(t("Fullscreen")) + '" title="' + esc(t("Fullscreen")) + '">&#9974;</button></div>'
-         );
-     }
-     return (
-       '<div class="amg-item amg-photo" data-full="' + m.src + '">' +
-       '<img src="' + m.src + '" alt="Apex Detailing" loading="lazy" />' +
-       '<button class="amg-expand" type="button" aria-label="' + esc(t("View fullscreen")) + '" title="' + esc(t("Fullscreen")) + '">⛶</button></div>'
-       );
-   }).join("");
+   var items = "";
    sec.setAttribute("data-apex-gallery", "1");
    sec.setAttribute("data-lang", getLang());
    sec.innerHTML = headHTML + '<div id="apex-gallery">' + items + "</div>";
@@ -807,7 +788,7 @@
    Promise.all([sitePromise, googlePromise]).then(function (results) {
      var siteItems = results[0] || [];
      var googleData = results[1] || {};
-     var googleItems = (googleData.reviews && googleData.reviews.length) ? googleData.reviews : GOOGLE_SEED_REVIEWS;
+     var googleItems = (googleData.reviews && googleData.reviews.length) ? googleData.reviews : [];
 
      if (!document.getElementById("apex-rev-grid")) return;
 

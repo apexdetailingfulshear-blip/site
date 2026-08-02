@@ -292,7 +292,7 @@ var titulo = document.getElementById("mediaTitulo").value;
 var descripcion = document.getElementById("mediaDescripcion").value;
 var categoria = document.getElementById("mediaCategoria").value;
 var id = Date.now() + "-" + Math.random().toString(36).slice(2, 8);
-var chunkSize = 4 * 1024 * 1024;
+var chunkSize = 1.5 * 1024 * 1024;
 
 mediaUploadBtn.disabled = true;
 mediaProgressWrap.classList.remove("hidden");
@@ -308,7 +308,7 @@ method: "POST",
 headers: { "Content-Type": "application/json", "x-admin-key": key },
 body: JSON.stringify({ id: id, totalChunks: total, tipo: tipo, categoria: categoria, titulo: titulo, descripcion: descripcion, contentType: f.type }),
 }).then(function (r) {
-if (!r.ok) throw new Error("status " + r.status);
+if (!r.ok) return r.text().then(function (t) { throw new Error("status " + r.status + ": " + t); });
 return r.json();
 });
 }
@@ -317,7 +317,7 @@ method: "POST",
 headers: { "Content-Type": "application/json", "x-admin-key": key },
 body: JSON.stringify({ id: id, index: i, dataBase64: chunks[i] }),
 }).then(function (r) {
-if (!r.ok) throw new Error("status " + r.status);
+if (!r.ok) return r.text().then(function (t) { throw new Error("status " + r.status + ": " + t); });
 i++;
 mediaProgress.style.width = Math.round((i / total) * 100) + "%";
 return uploadNext();

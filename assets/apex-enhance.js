@@ -112,6 +112,8 @@
  
   // reviews
   "Loading reviews...": "Cargando resenas...",
+ "Previous": "Anterior",
+ "Next": "Siguiente",
   "Share Your Experience": "Comparte tu Experiencia",
   "Rating": "Calificacion",
   "Your Review": "Tu Resena",
@@ -158,11 +160,15 @@
 { type: "video", src: "/assets/gallery/video-2.mp4", poster: "/assets/gallery/poster-2.jpg" },
 { type: "video", src: "/assets/gallery/video-3.mp4", poster: "/assets/gallery/poster-3.jpg" },
 { type: "video", src: "/assets/gallery/video-4.mp4", poster: "/assets/gallery/poster-4.jpg" },
+{ type: "video", src: "/assets/gallery/video-5.mp4", poster: "/assets/gallery/poster-5.jpg" },
 { type: "image", src: "/assets/gallery/photo-1.jpg" },
 { type: "image", src: "/assets/gallery/photo-2.jpg" },
 { type: "image", src: "/assets/gallery/photo-3.jpg" },
 { type: "image", src: "/assets/gallery/photo-4.jpg" },
 { type: "image", src: "/assets/gallery/photo-5.jpg" },
+{ type: "image", src: "/assets/gallery/photo-6.jpg" },
+{ type: "image", src: "/assets/gallery/photo-7.jpg" },
+{ type: "image", src: "/assets/gallery/photo-8.jpg" },
 ];
 
  /* ------------------------------------------------------------------ styles */
@@ -287,8 +293,15 @@
    "[class*=\"hover:border-blue-brand\"]:hover,[class*=\"focus:border-blue-brand\"]:focus{border-color:#139cd8 !important;}",
    "[class*=\"text-white\"][class*=\"md:hidden\"]{color:#202832 !important;}",
    "[class*=\"hover:text-white\"]:not([class*=\"hover:bg-blue-brand\"]):hover{color:#139cd8 !important;}","#apex-reviews-wrap{max-width:1100px;margin:0 auto;}",
-   "#apex-rev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:28px;}",
-   ".apex-rev-google-summary{grid-column:1/-1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid #d8dee3;border-radius:12px;padding:14px 18px;margin-bottom:4px;}",
+   "#apex-rev-grid{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:6px 4px 22px;scrollbar-width:thin;}",
+   "#apex-rev-grid::-webkit-scrollbar{height:6px;}",
+   "#apex-rev-grid::-webkit-scrollbar-thumb{background:#d8dee3;border-radius:99px;}",
+   ".apex-rev-window{position:relative;background:#f4f6f8;border:1px solid #e2e7eb;border-radius:20px;padding:16px 52px;margin-bottom:28px;}",
+   ".apex-rev-nav{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;border:1px solid #d8dee3;background:#fff;color:#202832;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(20,30,40,.12);z-index:2;}",
+   ".apex-rev-nav:hover{background:#29b6f6;color:#fff;border-color:#29b6f6;}",
+   ".apex-rev-prev{left:8px;}",
+   ".apex-rev-next{right:8px;}",
+   ".apex-rev-google-summary{flex:0 0 100%;display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid #d8dee3;border-radius:12px;padding:14px 18px;margin-bottom:4px;scroll-snap-align:start;}",
    ".apex-rev-google-summary-score{font-size:22px;font-weight:800;color:#202832;}",
    ".apex-rev-google-summary-stars{color:#f4b400;letter-spacing:1px;}",
    ".apex-rev-google-summary-count{color:#5a6672;font-size:13px;}",
@@ -297,13 +310,13 @@
    ".apex-rev-card-google{position:relative;}",
    ".apex-rev-google-badge{position:absolute;top:12px;right:12px;}",
    ".apex-rev-photo-round{width:32px;height:32px;border-radius:50%;object-fit:cover;margin-top:8px;}",
-".apex-rev-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-bottom:40px;}",
-".apex-rev-card{background:#fff;border:1px solid #d8dee3;border-radius:14px;padding:20px;box-shadow:0 2px 10px rgba(20,30,40,.05);}",
+".apex-rev-grid{display:flex;gap:16px;}",
+".apex-rev-card{background:#fff;border:1px solid #d8dee3;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(20,30,40,.05);flex:0 0 260px;scroll-snap-align:start;display:flex;flex-direction:column;height:220px;overflow:hidden;}",
 ".apex-rev-stars{color:#f5c518;letter-spacing:2px;margin-bottom:8px;font-size:15px;}",
 ".apex-rev-name{font-weight:700;color:#202832;margin-bottom:6px;}",
-".apex-rev-comment{color:#4b5560;line-height:1.5;font-size:14px;}",
-".apex-rev-photo{width:100%;max-height:180px;object-fit:cover;border-radius:10px;margin-top:12px;}",
-".apex-rev-empty{text-align:center;color:#667079;padding:20px;grid-column:1/-1;}",
+".apex-rev-comment{color:#4b5560;line-height:1.5;font-size:14px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;}",
+".apex-rev-photo{width:100%;max-height:120px;object-fit:cover;border-radius:10px;margin-top:10px;}",
+".apex-rev-empty{text-align:center;color:#667079;padding:20px;flex:1 1 100%;}",
 "#apex-review-form-wrap{background:#fff;border:1px solid #d8dee3;border-radius:16px;padding:28px;max-width:640px;margin:0 auto;}",
 "#apex-review-form-wrap h3{color:#202832;margin-top:0;}",
 ".apex-rf-row{margin-bottom:14px;}",
@@ -709,7 +722,11 @@
    sec.innerHTML =
      headHTML +
      '<div id="apex-reviews-wrap">' +
+     '<div class="apex-rev-window">' +
+     '<button type="button" class="apex-rev-nav apex-rev-prev" id="apex-rev-prev" aria-label="' + esc(t("Previous")) + '">&#8249;</button>' +
      '<div id="apex-rev-grid" class="apex-rev-grid"><div class="apex-rev-empty">' + esc(t("Loading reviews...")) + "</div></div>" +
+     '<button type="button" class="apex-rev-nav apex-rev-next" id="apex-rev-next" aria-label="' + esc(t("Next")) + '">&#8250;</button>' +
+     "</div>" +
      '<div id="apex-review-form-wrap">' +
      "<h3>" + esc(t("Share Your Experience")) + "</h3>" +
      '<div class="apex-rf-row"><label>' + esc(t("Name")) + '</label><input type="text" id="apex-rf-name" maxlength="80" /></div>' +
@@ -723,6 +740,21 @@
 
    loadApprovedReviews();
    wireReviewForm();
+   wireReviewNav(sec);
+ }
+
+ function wireReviewNav(sec) {
+   var track = sec.querySelector("#apex-rev-grid");
+   var prevBtn = sec.querySelector("#apex-rev-prev");
+   var nextBtn = sec.querySelector("#apex-rev-next");
+   if (!track || !prevBtn || !nextBtn) return;
+   function scrollByAmount(dir) {
+     var card = track.querySelector(".apex-rev-card, .apex-rev-google-summary");
+     var step = card ? card.getBoundingClientRect().width + 16 : 280;
+     track.scrollBy({ left: dir * step * 2, behavior: "smooth" });
+   }
+   prevBtn.addEventListener("click", function () { scrollByAmount(-1); });
+   nextBtn.addEventListener("click", function () { scrollByAmount(1); });
  }
 
  // Real reviews from Apex Detailing's Google Business Profile, added manually

@@ -25,8 +25,63 @@
 
   // Only small pre-existing UI labels are translated. Package names,
   // includes and prices stay in English everywhere (site content policy).
+  // Package names, includes, category titles and headers are translated to
+  // Spanish for display. The underlying pkg.name value used for data-book /
+  // the booking system is never altered — only what's shown on screen.
   var ES = {
     "Book Now": "Reservar",
+    "Starting at": "Desde",
+    "Our": "Nuestros",
+    "Packages": "Paquetes",
+    "Choose the package that fits your vehicle's needs.": "Elige el paquete que se ajuste a las necesidades de tu vehículo.",
+    "Prices may change depending on the vehicle's model and cleanliness condition.": "Los precios pueden variar según el modelo del vehículo y su condición de limpieza.",
+
+    "Full Detail": "Detalle Completo",
+    "Exterior Only": "Solo Exterior",
+    "Interior Only": "Solo Interior",
+
+    "Complete Detail": "Detalle Completo",
+    "Complete Deep Detail": "Detalle Completo Profundo",
+    "Exterior Refresh": "Renovación Exterior",
+    "Exterior Premium": "Exterior Premium",
+    "Ceramic Coating": "Recubrimiento Cerámico",
+    "Interior Refresh": "Renovación Interior",
+    "Interior Deep Detail": "Detalle Interior Profundo",
+
+    "Full exterior hand wash & wax": "Lavado y encerado exterior a mano completo",
+    "Complete interior vacuum & wipe-down": "Aspirado y limpieza completa del interior",
+    "Wheel & tire cleaning": "Limpieza de rines y llantas",
+    "Interior & exterior window cleaning": "Limpieza de vidrios interiores y exteriores",
+    "Dashboard, console & door detailing": "Detallado de tablero, consola y puertas",
+
+    "Everything in Complete Detail, plus:": "Todo lo del Detalle Completo, más:",
+    "Clay bar paint decontamination": "Descontaminación de pintura con clay bar",
+    "Wax or paint sealant": "Cera o sellador de pintura",
+    "Deep interior shampoo": "Shampoo profundo de interiores",
+    "Interior UV protectant": "Protector UV para interiores",
+
+    "Hand foam wash": "Lavado a mano con espuma",
+    "Tire shine application": "Aplicación de brillo para llantas",
+    "Microfiber towel drying": "Secado con toalla de microfibra",
+    "Exterior window cleaning": "Limpieza de vidrios exteriores",
+
+    "Everything in Exterior Refresh, plus:": "Todo lo de la Renovación Exterior, más:",
+    "Trim & plastic restoration": "Restauración de molduras y plásticos",
+
+    "Paint decontamination & prep": "Descontaminación y preparación de pintura",
+    "Professional-grade ceramic coating": "Recubrimiento cerámico de grado profesional",
+    "Long-lasting hydrophobic protection": "Protección hidrofóbica de larga duración",
+    "Enhanced gloss & UV resistance": "Brillo mejorado y resistencia UV",
+
+    "Full interior vacuum": "Aspirado completo del interior",
+    "Dashboard, console & door cleaning": "Limpieza de tablero, consola y puertas",
+    "Cup holder cleaning": "Limpieza de portavasos",
+    "Light deodorizing": "Desodorización ligera",
+
+    "Everything in Interior Refresh, plus:": "Todo lo de la Renovación Interior, más:",
+    "Deep seat & carpet shampoo": "Shampoo profundo de asientos y alfombras",
+    "Interior plastic restoration": "Restauración de plásticos interiores",
+    "Odor elimination": "Eliminación de olores",
   };
 
   function t(s) {
@@ -194,17 +249,17 @@
   function cardHTML(pkg) {
     return (
       '<div class="pkg-card" id="card-' + pkg.id + '" data-pkg="' + pkg.id + '" data-price="' + pkg.price + '">' +
-      '<img class="pkg-img" src="' + pkg.img + '" alt="' + esc(pkg.name) + '" loading="lazy">' +
+      '<img class="pkg-img" src="' + pkg.img + '" alt="' + esc(t(pkg.name)) + '" loading="lazy">' +
       '<div class="pkg-body">' +
-      '<p class="pkg-name">' + esc(pkg.name) + "</p>" +
+      '<p class="pkg-name">' + esc(t(pkg.name)) + "</p>" +
       '<ul class="service-list">' +
       pkg.includes.map(function (s) {
-        return '<li class="service-item">' + esc(s) + "</li>";
+        return '<li class="service-item">' + esc(t(s)) + "</li>";
       }).join("") +
       "</ul>" +
       '<div class="pkg-total-row"><span class="total-label">' + t("Starting at") + '</span>' +
       '<span class="total-amount">$' + pkg.price + "</span></div>" +
-      '<p class="card-disclaimer">* ' + esc(DISCLAIMER) + "</p>" +
+      '<p class="card-disclaimer">* ' + esc(t(DISCLAIMER)) + "</p>" +
       '<button type="button" class="btn-reserve btn-solid" data-book="' + esc(pkg.name) + '">' + t("Book Now") + "</button>" +
       "</div></div>"
     );
@@ -213,7 +268,7 @@
   function categoryHTML(cat) {
     return (
       '<div class="category-block" id="cat-' + cat.id + '">' +
-      '<h3 class="category-title">' + esc(cat.title) + "</h3>" +
+      '<h3 class="category-title">' + esc(t(cat.title)) + "</h3>" +
       '<div class="packages-grid">' + cat.packages.map(cardHTML).join("") + "</div>" +
       "</div>"
     );
@@ -223,9 +278,9 @@
     return (
       '<div id="apex-pkgs">' +
       '<div class="section-header">' +
-      "<h2>Our <span>Packages</span></h2>" +
-      "<p>Choose the package that fits your vehicle's needs.</p>" +
-      '<p class="disclaimer">* ' + esc(DISCLAIMER) + "</p>" +
+      "<h2>" + t("Our") + " <span>" + t("Packages") + "</span></h2>" +
+      "<p>" + t("Choose the package that fits your vehicle's needs.") + "</p>" +
+      '<p class="disclaimer">* ' + esc(t(DISCLAIMER)) + "</p>" +
       "</div>" +
       CATEGORIES.map(categoryHTML).join("") +
       "</div>"

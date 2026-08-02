@@ -16,8 +16,12 @@ exports.handler = async function (event) {
     const { blobs } = await store.list();
     const items = [];
     for (const b of blobs) {
-      const rec = await store.get(b.key, { type: "json" });
-      if (rec) items.push(rec);
+      try {
+        const rec = await store.get(b.key, { type: "json" });
+        if (rec) items.push(rec);
+      } catch (itemErr) {
+        continue;
+      }
     }
     items.sort(function (a, b2) {
       return new Date(b2.fecha) - new Date(a.fecha);

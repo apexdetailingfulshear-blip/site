@@ -109,7 +109,7 @@
           name: "Express Detail",
           subtitle: "Perfect for regular maintenance",
           price: 149,
-          img: "/service-ceramic.jpg",
+          img: "/service-ceramic-alt.jpg",
           includes: [
             "Full exterior hand wash",
             "Spray wax for added shine",
@@ -143,7 +143,7 @@
           id: "complete-deep",
           name: "Complete Deep Detail",
           price: 349,
-          img: "/service-engine.jpg",
+          img: "/service-engine-alt.jpg",
           includes: [
             "Everything in Complete Detail, plus:",
             "Clay bar paint decontamination",
@@ -162,7 +162,7 @@
           id: "ext-refresh",
           name: "Exterior Refresh",
           price: 99,
-          img: "/service-paint-alt.jpg",
+          img: "/service-paint.jpg",
           includes: [
             "Hand foam wash",
             "Wheel & tire cleaning",
@@ -175,7 +175,7 @@
           id: "ext-premium",
           name: "Exterior Premium",
           price: 179,
-          img: "/service-paint.jpg",
+          img: "/service-paint-alt.jpg",
           includes: [
             "Everything in Exterior Refresh, plus:",
             "Clay bar paint decontamination",

@@ -21,6 +21,7 @@
  // Any network with no confirmed URL is left out entirely (no dead links).
  var SOCIAL = {
    instagram: "https://www.instagram.com/apex_detailing_fulshear/",
+   whatsapp: "https://wa.me/13463070407",
  };
   var CITY_BASE = "/areas/";
 
@@ -151,6 +152,16 @@
  var PHONE_SVG =
    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
    '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>';
+
+ var WA_SVG =
+   '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+   '<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"></path>' +
+   '<path d="M12.031 0C5.463 0 .132 5.331.132 11.899c0 2.096.547 4.142 1.588 5.945L0 24l6.304-1.653a11.86 11.86 0 0 0 5.727 1.459h.005c6.567 0 11.898-5.331 11.898-11.899C23.934 5.339 18.603.008 12.031 0zm6.994 18.882a9.87 9.87 0 0 1-6.994 2.898h-.005a9.9 9.9 0 0 1-5.045-1.382l-.362-.215-3.741.981.999-3.648-.236-.374a9.87 9.87 0 0 1-1.516-5.267c0-5.462 4.446-9.908 9.905-9.908 2.646 0 5.132 1.031 7.001 2.903a9.84 9.84 0 0 1 2.898 6.997c0 5.462-4.446 9.908-9.904 9.908z" fill-rule="evenodd" clip-rule="evenodd" fill="none" stroke="none"></path></svg>';
+
+ var MAIL_SVG =
+   '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+   '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>' +
+   '<polyline points="22,6 12,13 2,6"></polyline></svg>';
 
  var EMAIL_ADDR = "apexdetailingfulshear@gmail.com";
  var EMAIL_SVG =
@@ -1204,10 +1215,31 @@
  function enhanceSocial() {
    ensureStyle();
 
-  // Header: persistent Instagram icon next to the language toggle / hamburger.
+  // Header: persistent WhatsApp, Email and Instagram icons next to the language toggle / hamburger.
   var headerRow = document.querySelector("header > div, header .flex.items-center.justify-between");
    if (headerRow && !document.getElementById("apex-header-ig")) {
      var hamburger = headerRow.querySelector(":scope > button");
+
+     var waA = document.createElement("a");
+     waA.id = "apex-header-wa";
+     waA.href = SOCIAL.whatsapp;
+     waA.target = "_blank";
+     waA.rel = "noopener noreferrer";
+     waA.setAttribute("aria-label", "Chat with Apex Detailing on WhatsApp");
+     waA.className = "apex-header-ig";
+     waA.innerHTML = WA_SVG;
+     if (hamburger) headerRow.insertBefore(waA, hamburger);
+     else headerRow.appendChild(waA);
+
+     var mailA = document.createElement("a");
+     mailA.id = "apex-header-mail";
+     mailA.href = "mailto:" + EMAIL_ADDR;
+     mailA.setAttribute("aria-label", "Email Apex Detailing");
+     mailA.className = "apex-header-ig";
+     mailA.innerHTML = MAIL_SVG;
+     if (hamburger) headerRow.insertBefore(mailA, hamburger);
+     else headerRow.appendChild(mailA);
+
      var a = document.createElement("a");
      a.id = "apex-header-ig";
      a.href = SOCIAL.instagram;

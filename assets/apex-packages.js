@@ -109,7 +109,7 @@
           name: "Express Detail",
           subtitle: "Perfect for regular maintenance",
           price: 149,
-          img: "/service-ceramic-alt.jpg",
+          img: "/service-real-wheel-tire.jpg",
           includes: [
             "Full exterior hand wash",
             "Spray wax for added shine",
@@ -130,7 +130,7 @@
           id: "complete",
           name: "Complete Detail",
           price: 249,
-          img: "/service-headlight.jpg",
+          img: "/service-real-bmw-night.jpg",
           includes: [
             "Full exterior hand wash & wax",
             "Complete interior vacuum & wipe-down",
@@ -143,7 +143,7 @@
           id: "complete-deep",
           name: "Complete Deep Detail",
           price: 349,
-          img: "/service-engine-alt.jpg",
+          img: "/service-real-bumper-correction.jpg",
           includes: [
             "Everything in Complete Detail, plus:",
             "Clay bar paint decontamination",
@@ -162,7 +162,7 @@
           id: "ext-refresh",
           name: "Exterior Refresh",
           price: 99,
-          img: "/service-paint.jpg",
+          img: "/service-real-foam-rinse.jpg",
           includes: [
             "Hand foam wash",
             "Wheel & tire cleaning",
@@ -175,7 +175,7 @@
           id: "ext-premium",
           name: "Exterior Premium",
           price: 179,
-          img: "/service-paint-alt.jpg",
+          img: "/service-real-polish-red.jpg",
           includes: [
             "Everything in Exterior Refresh, plus:",
             "Clay bar paint decontamination",
@@ -187,7 +187,7 @@
           id: "ceramic",
           name: "Ceramic Coating",
           price: 449,
-          img: "/service-ceramic.jpg",
+          img: "/service-real-ceramic-apply.jpg",
           includes: [
             "Paint decontamination & prep",
             "Professional-grade ceramic coating",
@@ -205,7 +205,7 @@
           id: "int-refresh",
           name: "Interior Refresh",
           price: 129,
-          img: "/service-seats.jpg",
+          img: "/service-real-steam-interior.jpg",
           includes: [
             "Full interior vacuum",
             "Dashboard, console & door cleaning",
@@ -218,7 +218,7 @@
           id: "int-deep",
           name: "Interior Deep Detail",
           price: 199,
-          img: "/service-seats-alt.jpg",
+          img: "/service-real-interior-white.jpg",
           includes: [
             "Everything in Interior Refresh, plus:",
             "Deep seat & carpet shampoo",

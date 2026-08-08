@@ -49,6 +49,7 @@
    "Preferred date": "Fecha preferida",
    "Preferred time": "Hora preferida",
    "Vehicle photos": "Fotos del vehículo",
+   "optional, but helps us quote faster": "opcional, pero nos ayuda a cotizar más rápido",
    "Tap to upload": "Toca para subir",
    "or drag your photos here": "o arrastra tus fotos aquí",
    "Interior, exterior and any details (max.": "Interior, exterior y cualquier detalle (máx.",
@@ -182,6 +183,7 @@
    "#apex-modal .amx-pkg{display:inline-block;font-size:12px;font-weight:700;color:#29b6f6;background:rgba(41,182,246,.1);border:1px solid rgba(41,182,246,.25);border-radius:20px;padding:4px 12px;margin-bottom:6px;}",
    "#apex-modal label{display:block;font-size:12px;color:#4b5560;margin:14px 0 5px;font-weight:600;}",
    "#apex-modal .amx-req{color:#29b6f6;}",
+   "#apex-modal .amx-optional{color:#8a94a3;font-weight:400;font-size:0.85em;}",
    "#apex-modal input[type=text],#apex-modal input[type=tel],#apex-modal input[type=email],#apex-modal input[type=date],#apex-modal input[type=time],#apex-modal textarea{width:100%;box-sizing:border-box;background:#eef1f4;border:1px solid #d8dee3;border-radius:8px;padding:10px 12px;color:#202832;font-size:14px;font-family:inherit;transition:border-color .15s;}",
    "#apex-modal .amx-addons{font-size:12px;color:#29b6f6;background:rgba(41,182,246,.08);border:1px solid rgba(41,182,246,.2);border-radius:8px;padding:8px 10px;margin:-2px 0 4px;line-height:1.4;}",
    "#apex-modal input:focus,#apex-modal textarea:focus{outline:none;border-color:#29b6f6;}",
@@ -395,7 +397,7 @@
      '<input type="date" id="amx-fecha" />' +
      "<label>" + t("Preferred time") + ' <span class="amx-req">*</span></label>' +
      '<input type="time" id="amx-hora" />' +
-     "<label>" + t("Vehicle photos") + ' <span class="amx-req">*</span></label>' +
+     "<label>" + t("Vehicle photos") + ' <span class="amx-optional">(' + t("optional, but helps us quote faster") + ')</span></label>' +
      '<div class="amx-drop" id="amx-drop"><strong>' + t("Tap to upload") + "</strong> " + t("or drag your photos here") + "<br>" + t("Interior, exterior and any details (max.") + " " + MAX_FILES + ")</div>" +
      '<div class="amx-previews" id="amx-previews"></div>' +
      "<label>" + t("Notes (optional)") + "</label>" +
@@ -544,7 +546,6 @@
    if (!tel) { setMsg(t("Please enter your phone number."), "err"); return; }
    if (!fecha) { setMsg(t("Please choose a date."), "err"); return; }
    if (!hora) { setMsg(t("Please choose a time."), "err"); return; }
-   if (!files.length) { setMsg(t("Upload at least one photo of your vehicle."), "err"); return; }
 
   var fd = new FormData();
    fd.append("form-name", "booking");

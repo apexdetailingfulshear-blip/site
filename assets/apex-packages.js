@@ -97,7 +97,7 @@
     return getLang() === "es" && ES[s] ? ES[s] : s;
   }
 
-  var DISCLAIMER = "Prices may change depending on the vehicle's model and cleanliness condition.";
+  var DISCLAIMER = "Prices may vary depending on the vehicle's size, model, condition, and level of cleanliness.";
 
   var CATEGORIES = [
     {
@@ -111,13 +111,11 @@
           price: 149,
           img: "/service-real-wheel-tire.jpg",
           includes: [
-            "Full exterior hand wash",
-            "Spray wax for added shine",
-            "Complete interior vacuum",
-            "Dashboard & center console wipe-down",
-            "Interior & exterior window cleaning",
+            "Exterior hand wash & dry",
+            "Interior vacuum",
+            "Dashboard & console wipe-down",
             "Wheel & tire cleaning",
-            "Tire shine",
+            "Interior & exterior window cleaning",
           ],
         },
       ],
@@ -137,19 +135,26 @@
             "Wheel & tire cleaning",
             "Interior & exterior window cleaning",
             "Dashboard, console & door detailing",
+            "Tire shine",
+            "Door jamb cleaning",
           ],
         },
         {
           id: "complete-deep",
-          name: "Complete Deep Detail",
+          name: "Premium Complete Detail",
           price: 349,
-          img: "/service-real-bumper-correction.jpg",
+          img: "/service-real-ceramic-apply.jpg",
           includes: [
             "Everything in Complete Detail, plus:",
-            "Clay bar paint decontamination",
-            "Wax or paint sealant",
-            "Deep interior shampoo",
-            "Interior UV protectant",
+            "Deep seat & carpet cleaning",
+            "Deep interior cleaning",
+            "Interior plastic treatment",
+            "Interior UV protection",
+            "Chemical paint decontamination",
+            "Clay bar treatment",
+            "Trim & plastic restoration",
+            "Premium paint protection",
+            "Odor treatment",
           ],
         },
       ],
@@ -162,7 +167,7 @@
           id: "ext-refresh",
           name: "Exterior Refresh",
           price: 99,
-          img: "/service-real-foam-rinse.jpg",
+          img: "/service-headlight.jpg",
           includes: [
             "Hand foam wash",
             "Wheel & tire cleaning",
@@ -175,21 +180,24 @@
           id: "ext-premium",
           name: "Exterior Premium",
           price: 179,
-          img: "/service-real-polish-red.jpg",
+          img: "/service-real-foam-rinse.jpg",
           includes: [
             "Everything in Exterior Refresh, plus:",
-            "Clay bar paint decontamination",
+            "Chemical paint decontamination",
+            "Clay bar treatment",
             "Wax or paint sealant",
             "Trim & plastic restoration",
+            "Enhanced exterior shine & protection",
           ],
         },
         {
           id: "ceramic",
           name: "Ceramic Coating",
           price: 449,
-          img: "/service-real-ceramic-apply.jpg",
+          img: "/service-real-polish-red.jpg",
           includes: [
-            "Paint decontamination & prep",
+            "Everything in Premium Complete Detail, plus:",
+            "One-step machine polish / paint enhancement",
             "Professional-grade ceramic coating",
             "Long-lasting hydrophobic protection",
             "Enhanced gloss & UV resistance",
@@ -207,7 +215,7 @@
           price: 129,
           img: "/service-real-steam-interior.jpg",
           includes: [
-            "Full interior vacuum",
+            "Complete interior vacuum",
             "Dashboard, console & door cleaning",
             "Interior window cleaning",
             "Cup holder cleaning",
@@ -221,10 +229,12 @@
           img: "/service-real-interior-white.jpg",
           includes: [
             "Everything in Interior Refresh, plus:",
-            "Deep seat & carpet shampoo",
+            "Deep interior cleaning",
+            "Seat & carpet shampoo",
+            "Detailed dashboard, console & doors",
             "Interior plastic restoration",
             "Interior UV protectant",
-            "Odor elimination",
+            "Odor treatment",
           ],
         },
       ],

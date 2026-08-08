@@ -312,16 +312,14 @@
     return all;
   }
 
-  function fullHTML() {
+  function innerHTML() {
     return (
-      '<div id="apex-pkgs">' +
       '<div class="section-header">' +
       "<h2>" + t("Our") + " <span>" + t("Packages") + "</span></h2>" +
       "<p>" + t("Choose the package that fits your vehicle's needs.") + "</p>" +
       '<p class="disclaimer">* ' + esc(t(DISCLAIMER)) + "</p>" +
       "</div>" +
-      '<div class="packages-grid">' + allPackagesSortedByPrice().map(cardHTML).join("") + "</div>" +
-      "</div>"
+      '<div class="packages-grid">' + allPackagesSortedByPrice().map(cardHTML).join("") + "</div>"
     );
   }
 
@@ -335,35 +333,55 @@
 
   var lastLang = null;
 
+  // React still owns and periodically re-renders #paquetes (e.g. on language
+  // switch). Never delete/replace its own children — deleting nodes React
+  // still holds references to makes React re-insert them on its next render,
+  // landing its original title/cards on top of ours (the overlapping-text
+  // bug). Instead: hide React's original children with CSS and keep our own
+  // content in a single dedicated wrapper that only this script ever touches.
+  function hideReactContent(sec) {
+    for (var i = 0; i < sec.children.length; i++) {
+      var el = sec.children[i];
+      if (el.id !== "apex-pkgs" && el.style.display !== "none") {
+        el.style.display = "none";
+      }
+    }
+  }
+
   function inject() {
     var sec = document.getElementById("paquetes");
     if (!sec) return;
-    if (sec.getAttribute("data-apex-pkgs") === "1") return;
 
     ensureStyle();
-    sec.setAttribute("data-apex-pkgs", "1");
-    lastLang = getLang();
-    sec.innerHTML = fullHTML();
+    hideReactContent(sec);
 
-    var wrap = sec.querySelector("#apex-pkgs");
-    wrap.addEventListener("click", function (e) {
-      var bookBtn = e.target.closest("[data-book]");
-      if (!bookBtn) return;
-      var card = bookBtn.closest(".pkg-card");
-      var price = card ? parseInt(card.getAttribute("data-price"), 10) : null;
-      bookPackage(bookBtn.getAttribute("data-book"), price);
-    });
+    var wrap = document.getElementById("apex-pkgs");
+    if (!wrap) {
+      wrap = document.createElement("div");
+      wrap.id = "apex-pkgs";
+      sec.appendChild(wrap);
+      wrap.addEventListener("click", function (e) {
+        var bookBtn = e.target.closest("[data-book]");
+        if (!bookBtn) return;
+        var card = bookBtn.closest(".pkg-card");
+        var price = card ? parseInt(card.getAttribute("data-price"), 10) : null;
+        bookPackage(bookBtn.getAttribute("data-book"), price);
+      });
+    }
+
+    lastLang = getLang();
+    wrap.innerHTML = innerHTML();
   }
 
-  // Re-inject when #paquetes (re)mounts, and re-render when the language changes.
+  // On every DOM mutation: re-hide any original content React may have
+  // re-inserted, make sure our wrapper exists, and re-render it if the
+  // language changed. Never touch React's own nodes beyond hiding them.
   var obs = new MutationObserver(function () {
     var sec = document.getElementById("paquetes");
-    if (sec && sec.getAttribute("data-apex-pkgs") !== "1") {
-      inject();
-      return;
-    }
-    if (sec && lastLang && getLang() !== lastLang) {
-      sec.removeAttribute("data-apex-pkgs");
+    if (!sec) return;
+    hideReactContent(sec);
+    var wrap = document.getElementById("apex-pkgs");
+    if (!wrap || (lastLang && getLang() !== lastLang)) {
       inject();
     }
   });

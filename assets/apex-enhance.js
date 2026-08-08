@@ -49,6 +49,7 @@
    "Preferred date": "Fecha preferida",
    "Preferred time": "Hora preferida",
    "Vehicle photos": "Fotos del vehículo",
+   "reviews": "reseñas",
    "optional, but helps us quote faster": "opcional, pero nos ayuda a cotizar más rápido",
    "Tap to upload": "Toca para subir",
    "or drag your photos here": "o arrastra tus fotos aquí",
@@ -743,9 +744,10 @@
    wrap.setAttribute("data-lang", getLang());
 
    var headHTML =
-     '<h2 class="text-3xl md:text-4xl font-bold text-center mb-12">' +
+     '<h2 class="text-3xl md:text-4xl font-bold text-center mb-2">' +
      hdr("What Our", "Clients Say", "Lo Que Dicen", "Nuestros Clientes", "text-blue-brand") +
-     "</h2>";
+     "</h2>" +
+     '<p id="apex-rev-count" class="text-center text-gray-400 mb-10"></p>';
    var starsHtml = [1, 2, 3, 4, 5].map(function (n) { return '<span data-n="' + n + '">\u2605</span>'; }).join("");
    wrap.innerHTML =
      headHTML +
@@ -919,6 +921,13 @@
        return;
      }
      grid.innerHTML = cardsHtml;
+
+     var countEl = document.getElementById("apex-rev-count");
+     if (countEl) {
+       var total = (googleData.totalReviews) ? googleData.totalReviews : (googleItems.length + siteItems.length);
+       var avg = googleData.overallRating ? googleData.overallRating : 5;
+       countEl.textContent = "\u2605 " + avg + " \u00b7 " + total + " " + t("reviews");
+     }
    }).catch(function () {
      if (grid) grid.innerHTML = '<div class="apex-rev-empty">' + esc(t("Reviews are unavailable right now.")) + "</div>";
    });

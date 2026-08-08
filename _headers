@@ -1,0 +1,8 @@
+/assets/apex-packages.js
+  Cache-Control: no-cache, must-revalidate
+
+/assets/apex-enhance.js
+  Cache-Control: no-cache, must-revalidate
+
+/service-*.jpg
+  Cache-Control: no-cache, must-revalidate

@@ -53,11 +53,17 @@ label { font-size:12px; color:#8a8fa8; display:block; margin-top:8px; }
 </div>
 <div class="tabs">
 <button id="tabReviewsBtn" class="active">Resenas</button>
+<button id="tabReservasBtn">Reservas</button>
 <button id="tabMediaBtn">Galeria</button>
 </div>
 
+<div id="tabReservas" class="hidden">
+<h2>Reservas de clientes</h2>
+<div id="reservasList">Cargando...</div>
+</div>
+
 <div id="tabReviews">
-<h2>Resenas de clientes</h2>
+<h2 id="reviewsCount">Resenas de clientes</h2>
 <div id="reviewsList">Cargando...</div>
 </div>
 
@@ -125,6 +131,7 @@ sessionStorage.setItem("apex_admin_key", k);
 gate.classList.add("hidden");
 panel.classList.remove("hidden");
 loadReviews();
+loadReservas();
 loadMedia();
 })
 .catch(function (e) { gateErr.textContent = e.message; });
@@ -141,17 +148,21 @@ if (savedKey) { keyInput.value = savedKey; tryEnter(); }
 
 /* tabs */
 var tabReviewsBtn = document.getElementById("tabReviewsBtn");
+var tabReservasBtn = document.getElementById("tabReservasBtn");
 var tabMediaBtn = document.getElementById("tabMediaBtn");
 var tabReviews = document.getElementById("tabReviews");
+var tabReservas = document.getElementById("tabReservas");
 var tabMedia = document.getElementById("tabMedia");
-tabReviewsBtn.addEventListener("click", function () {
-tabReviewsBtn.classList.add("active"); tabMediaBtn.classList.remove("active");
-tabReviews.classList.remove("hidden"); tabMedia.classList.add("hidden");
-});
-tabMediaBtn.addEventListener("click", function () {
-tabMediaBtn.classList.add("active"); tabReviewsBtn.classList.remove("active");
-tabMedia.classList.remove("hidden"); tabReviews.classList.add("hidden");
-});
+function showTab(which) {
+tabReviewsBtn.classList.remove("active"); tabReservasBtn.classList.remove("active"); tabMediaBtn.classList.remove("active");
+tabReviews.classList.add("hidden"); tabReservas.classList.add("hidden"); tabMedia.classList.add("hidden");
+if (which === "reviews") { tabReviewsBtn.classList.add("active"); tabReviews.classList.remove("hidden"); }
+if (which === "reservas") { tabReservasBtn.classList.add("active"); tabReservas.classList.remove("hidden"); }
+if (which === "media") { tabMediaBtn.classList.add("active"); tabMedia.classList.remove("hidden"); }
+}
+tabReviewsBtn.addEventListener("click", function () { showTab("reviews"); });
+tabReservasBtn.addEventListener("click", function () { showTab("reservas"); loadReservas(); });
+tabMediaBtn.addEventListener("click", function () { showTab("media"); });
 
 /* ---------------- reviews ---------------- */
 var reviewsList = document.getElementById("reviewsList");
@@ -165,6 +176,7 @@ fetch("/.netlify/functions/admin-list-reviews", { headers: { "x-admin-key": key 
 }
 
 function renderReviews(items) {
+document.getElementById("reviewsCount").textContent = "Resenas de clientes (" + items.length + ")";
 if (!items.length) { reviewsList.textContent = "Todavia no hay resenas."; return; }
 reviewsList.innerHTML = items.map(function (it) {
 var badge = it.estado === "aprobada" ? "<span class=\"tag\">Aprobada</span>" : (it.estado === "rechazada" ? "<span class=\"tag\">Rechazada</span>" : "<span class=\"tag\">Pendiente</span>");
@@ -195,6 +207,75 @@ body: JSON.stringify({ id: id, action: action }),
 if (!r.ok) throw new Error("status " + r.status);
 loadReviews();
 }).catch(function () { alert("No se pudo actualizar la resena."); });
+});
+});
+}
+
+/* ---------------- reservas ---------------- */
+var reservasList = document.getElementById("reservasList");
+var reservasLoaded = false;
+
+function loadReservas() {
+if (reservasLoaded) return;
+reservasList.textContent = "Cargando...";
+fetch("/.netlify/functions/list-reservas", { headers: { "x-admin-key": key } })
+.then(function (r) { if (!r.ok) throw new Error("status " + r.status); return r.json(); })
+.then(function (items) { reservasLoaded = true; renderReservas(items); })
+.catch(function (e) { reservasList.textContent = "Error al cargar: " + e.message; });
+}
+
+var ESTADOS = { nuevo: "Nuevo", contactado: "Contactado", completado: "Completado", cancelado: "Cancelado" };
+
+function renderReservas(items) {
+if (!items.length) { reservasList.innerHTML = "Todavia no hay reservas."; return; }
+reservasList.innerHTML = items.map(function (it) {
+var estado = it.estado || "nuevo";
+var badge = '<span class="tag">' + (ESTADOS[estado] || estado) + '</span>';
+var telDigits = (it.telefono || "").replace(/[^0-9]/g, "");
+var waLink = telDigits ? '<a href="https://wa.me/' + (telDigits.length === 10 ? "1" + telDigits : telDigits) + '" target="_blank" rel="noopener"><button class="act" type="button">WhatsApp</button></a>' : "";
+var callLink = telDigits ? '<a href="tel:' + telDigits + '"><button class="act" type="button">Llamar</button></a>' : "";
+var mailLink = it.email ? '<a href="mailto:' + esc(it.email) + '"><button class="act" type="button">Correo</button></a>' : "";
+return '<div class="card" data-id="' + esc(it.id) + '">' +
+badge + (it.origen ? ' <span class="tag">' + esc(it.origen) + '</span>' : '') +
+'<div><strong>' + esc(it.nombre || "(sin nombre)") + '</strong> &middot; ' + esc(it.telefono || "") + '</div>' +
+(it.vehiculo ? '<div>' + esc(it.vehiculo) + '</div>' : '') +
+(it.paquete ? '<div>' + esc(it.paquete) + (it.total_estimado ? " &middot; $" + esc(it.total_estimado) : "") + '</div>' : '') +
+(it.fecha || it.hora ? '<div>' + esc(it.fecha) + ' ' + esc(it.hora) + '</div>' : '') +
+(it.notas ? '<div class="meta">' + esc(it.notas) + '</div>' : '') +
+'<div class="meta">Recibido: ' + esc(it.recibido ? new Date(it.recibido).toLocaleString() : "") + '</div>' +
+'<div class="row">' + callLink + waLink + mailLink + '</div>' +
+'<label>Estado</label>' +
+'<select class="restate">' +
+Object.keys(ESTADOS).map(function (k2) { return '<option value="' + k2 + '"' + (k2 === estado ? " selected" : "") + '>' + ESTADOS[k2] + '</option>'; }).join("") +
+'</select>' +
+'<div class="row"><button class="danger act" data-action="delete">Eliminar</button></div>' +
+'</div>';
+}).join("");
+reservasList.querySelectorAll(".restate").forEach(function (sel) {
+sel.addEventListener("change", function () {
+var card = sel.closest(".card");
+var id = card.getAttribute("data-id");
+fetch("/.netlify/functions/admin-reserva-action", {
+method: "POST",
+headers: { "Content-Type": "application/json", "x-admin-key": key },
+body: JSON.stringify({ id: id, action: "estado", estado: sel.value }),
+}).catch(function () { alert("No se pudo actualizar el estado."); });
+});
+});
+reservasList.querySelectorAll(".act[data-action]").forEach(function (btn) {
+btn.addEventListener("click", function () {
+var card = btn.closest(".card");
+var id = card.getAttribute("data-id");
+if (!confirm("Eliminar esta reserva permanentemente?")) return;
+fetch("/.netlify/functions/admin-reserva-action", {
+method: "POST",
+headers: { "Content-Type": "application/json", "x-admin-key": key },
+body: JSON.stringify({ id: id, action: "delete" }),
+}).then(function (r) {
+if (!r.ok) throw new Error("status " + r.status);
+reservasLoaded = false;
+loadReservas();
+}).catch(function () { alert("No se pudo eliminar."); });
 });
 });
 }

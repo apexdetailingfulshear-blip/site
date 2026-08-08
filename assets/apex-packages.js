@@ -109,7 +109,7 @@
           name: "Express Detail",
           subtitle: "Perfect for regular maintenance",
           price: 149,
-          img: "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?q=80&w=800&auto=format&fit=crop",
+          img: "/service-mobile.jpg",
           includes: [
             "Full exterior hand wash",
             "Spray wax for added shine",
@@ -130,7 +130,7 @@
           id: "complete",
           name: "Complete Detail",
           price: 249,
-          img: "https://images.unsplash.com/photo-1605164599894-ca98960d41b6?q=80&w=800&auto=format&fit=crop",
+          img: "/service-exterior.jpg",
           includes: [
             "Full exterior hand wash & wax",
             "Complete interior vacuum & wipe-down",
@@ -143,7 +143,7 @@
           id: "complete-deep",
           name: "Complete Deep Detail",
           price: 349,
-          img: "https://images.unsplash.com/photo-1620584898989-d39f7f9ed1b7?q=80&w=800&auto=format&fit=crop",
+          img: "/service-paint.jpg",
           includes: [
             "Everything in Complete Detail, plus:",
             "Clay bar paint decontamination",
@@ -162,7 +162,7 @@
           id: "ext-refresh",
           name: "Exterior Refresh",
           price: 99,
-          img: "https://images.unsplash.com/photo-1633014041037-f5446fb4ce99?q=80&w=800&auto=format&fit=crop",
+          img: "/service-exterior.jpg",
           includes: [
             "Hand foam wash",
             "Wheel & tire cleaning",
@@ -175,7 +175,7 @@
           id: "ext-premium",
           name: "Exterior Premium",
           price: 179,
-          img: "https://images.unsplash.com/photo-1708805282695-ef186db20192?q=80&w=800&auto=format&fit=crop",
+          img: "/service-paint.jpg",
           includes: [
             "Everything in Exterior Refresh, plus:",
             "Clay bar paint decontamination",
@@ -187,7 +187,7 @@
           id: "ceramic",
           name: "Ceramic Coating",
           price: 449,
-          img: "https://images.unsplash.com/photo-1611651186486-415f04eb78e4?q=80&w=800&auto=format&fit=crop",
+          img: "/service-ceramic.jpg",
           includes: [
             "Paint decontamination & prep",
             "Professional-grade ceramic coating",
@@ -205,7 +205,7 @@
           id: "int-refresh",
           name: "Interior Refresh",
           price: 129,
-          img: "https://images.unsplash.com/photo-1633080413572-01ae7263f7d4?q=80&w=800&auto=format&fit=crop",
+          img: "/service-interior.jpg",
           includes: [
             "Full interior vacuum",
             "Dashboard, console & door cleaning",
@@ -218,7 +218,7 @@
           id: "int-deep",
           name: "Interior Deep Detail",
           price: 199,
-          img: "https://images.unsplash.com/photo-1605437241278-c1806d14a4d9?q=80&w=800&auto=format&fit=crop",
+          img: "/service-seats.jpg",
           includes: [
             "Everything in Interior Refresh, plus:",
             "Deep seat & carpet shampoo",

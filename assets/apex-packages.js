@@ -4,7 +4,7 @@
  * compiled bundle with no editable source. All styles are scoped under
  * #apex-pkgs so nothing leaks into the rest of the site.
  *
- * Only these 7 packages exist. Package "name" is the exact string sent to
+ * Only these 8 packages exist. Package "name" is the exact string sent to
  * the booking system (data-book) — never translate or alter it.
  */
 (function () {
@@ -39,6 +39,15 @@
     "Full Detail": "Detalle Completo",
     "Exterior Only": "Solo Exterior",
     "Interior Only": "Solo Interior",
+    "Express": "Express",
+
+    "Express Detail": "Detalle Express",
+    "Perfect for regular maintenance": "Perfecto para mantenimiento regular",
+    "Full exterior hand wash": "Lavado exterior a mano completo",
+    "Spray wax for added shine": "Cera en spray para brillo adicional",
+    "Complete interior vacuum": "Aspirado interior completo",
+    "Dashboard & center console wipe-down": "Limpieza de tablero y consola central",
+    "Tire shine": "Brillo para llantas",
 
     "Complete Detail": "Detalle Completo",
     "Complete Deep Detail": "Detalle Completo Profundo",
@@ -91,6 +100,28 @@
   var DISCLAIMER = "Prices may change depending on the vehicle's model and cleanliness condition.";
 
   var CATEGORIES = [
+    {
+      id: "express",
+      title: "Express",
+      packages: [
+        {
+          id: "express-detail",
+          name: "Express Detail",
+          subtitle: "Perfect for regular maintenance",
+          price: 149,
+          img: "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?q=80&w=800&auto=format&fit=crop",
+          includes: [
+            "Full exterior hand wash",
+            "Spray wax for added shine",
+            "Complete interior vacuum",
+            "Dashboard & center console wipe-down",
+            "Interior & exterior window cleaning",
+            "Wheel & tire cleaning",
+            "Tire shine",
+          ],
+        },
+      ],
+    },
     {
       id: "full",
       title: "Full Detail",
@@ -218,6 +249,7 @@
     "#apex-pkgs .pkg-img { width: 100%; height: 150px; object-fit: cover; display: block; background: #eef1f4; }",
     "#apex-pkgs .pkg-body { padding: 20px; display: flex; flex-direction: column; gap: 12px; flex: 1; }",
     "#apex-pkgs .pkg-name { font-size: 1.1rem; font-weight: 700; color: #202832; }",
+    "#apex-pkgs .pkg-subtitle { font-size: 12.5px; color: #667079; margin-top: -8px; }",
     "#apex-pkgs .service-list { list-style: none; display: flex; flex-direction: column; gap: 6px; flex: 1; }",
     "#apex-pkgs .service-item { font-size: 12.5px; color: #3f4750; line-height: 1.4; padding-left: 15px; position: relative; }",
     "#apex-pkgs .service-item::before { content: '\\2713'; position: absolute; left: 0; top: 0; color: #29b6f6; font-weight: 700; }",
@@ -252,6 +284,7 @@
       '<img class="pkg-img" src="' + pkg.img + '" alt="' + esc(t(pkg.name)) + '" loading="lazy">' +
       '<div class="pkg-body">' +
       '<p class="pkg-name">' + esc(t(pkg.name)) + "</p>" +
+      (pkg.subtitle ? '<p class="pkg-subtitle">' + esc(t(pkg.subtitle)) + "</p>" : "") +
       '<ul class="service-list">' +
       pkg.includes.map(function (s) {
         return '<li class="service-item">' + esc(t(s)) + "</li>";

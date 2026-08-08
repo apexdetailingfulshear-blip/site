@@ -109,7 +109,7 @@
           name: "Express Detail",
           subtitle: "Perfect for regular maintenance",
           price: 149,
-          img: "/service-mobile.jpg",
+          img: "/service-headlight.jpg",
           includes: [
             "Full exterior hand wash",
             "Spray wax for added shine",
@@ -130,7 +130,7 @@
           id: "complete",
           name: "Complete Detail",
           price: 249,
-          img: "/service-exterior.jpg",
+          img: "/service-ceramic.jpg",
           includes: [
             "Full exterior hand wash & wax",
             "Complete interior vacuum & wipe-down",
@@ -162,7 +162,7 @@
           id: "ext-refresh",
           name: "Exterior Refresh",
           price: 99,
-          img: "/service-exterior.jpg",
+          img: "/service-headlight.jpg",
           includes: [
             "Hand foam wash",
             "Wheel & tire cleaning",
@@ -205,7 +205,7 @@
           id: "int-refresh",
           name: "Interior Refresh",
           price: 129,
-          img: "/service-interior.jpg",
+          img: "/service-seats.jpg",
           includes: [
             "Full interior vacuum",
             "Dashboard, console & door cleaning",

@@ -299,13 +299,17 @@
     );
   }
 
-  function categoryHTML(cat) {
-    return (
-      '<div class="category-block" id="cat-' + cat.id + '">' +
-      '<h3 class="category-title">' + esc(t(cat.title)) + "</h3>" +
-      '<div class="packages-grid">' + cat.packages.map(cardHTML).join("") + "</div>" +
-      "</div>"
-    );
+  function allPackagesSortedByPrice() {
+    var all = [];
+    CATEGORIES.forEach(function (cat) {
+      cat.packages.forEach(function (pkg) {
+        all.push(pkg);
+      });
+    });
+    all.sort(function (a, b) {
+      return a.price - b.price;
+    });
+    return all;
   }
 
   function fullHTML() {
@@ -316,7 +320,7 @@
       "<p>" + t("Choose the package that fits your vehicle's needs.") + "</p>" +
       '<p class="disclaimer">* ' + esc(t(DISCLAIMER)) + "</p>" +
       "</div>" +
-      CATEGORIES.map(categoryHTML).join("") +
+      '<div class="packages-grid">' + allPackagesSortedByPrice().map(cardHTML).join("") + "</div>" +
       "</div>"
     );
   }

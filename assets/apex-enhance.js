@@ -616,10 +616,34 @@
  }
 
  /* ------------------------------------------------------------------ gallery */
+ // Same fix as packages/testimonials: never overwrite #galeria's own React
+ // content — hide it and render into our own wrapper so React re-renders
+ // (e.g. on language switch) can never land its original content on top of
+ // ours.
+ function hideOriginalGaleria(sec) {
+   for (var i = 0; i < sec.children.length; i++) {
+     var el = sec.children[i];
+     if (el.id !== "apex-gallery-wrap" && el.style.display !== "none") {
+       el.style.display = "none";
+     }
+   }
+ }
+
  function injectGallery() {
    var sec = document.getElementById("galeria");
-   if (!sec || sec.getAttribute("data-apex-gallery") === "1") return;
+   if (!sec) return;
    ensureStyle();
+   hideOriginalGaleria(sec);
+
+   var wrap = document.getElementById("apex-gallery-wrap");
+   if (wrap && wrap.getAttribute("data-lang") === getLang()) return;
+   if (!wrap) {
+     wrap = document.createElement("div");
+     wrap.id = "apex-gallery-wrap";
+     sec.appendChild(wrap);
+   }
+   wrap.setAttribute("data-lang", getLang());
+
    var headHTML =
      '<h2 class="text-3xl md:text-4xl font-bold text-center mb-12">' +
      hdr("Our", "Gallery", "Nuestra", "Galería", "text-blue-brand") +
@@ -644,26 +668,24 @@
        '<button class="amg-expand" type="button" aria-label="' + esc(t("View fullscreen")) + '" title="' + esc(t("Fullscreen")) + '">⛶</button></div>'
        );
    }).join("");
-   sec.setAttribute("data-apex-gallery", "1");
-   sec.setAttribute("data-lang", getLang());
-   sec.innerHTML = headHTML + '<div id="apex-gallery">' + items + "</div>";
+   wrap.innerHTML = headHTML + '<div id="apex-gallery">' + items + "</div>";
 
-  sec.querySelectorAll("#apex-gallery img").forEach(function (el) {
+  wrap.querySelectorAll("#apex-gallery img").forEach(function (el) {
     el.addEventListener("error", function () {
       var item = el.closest(".amg-item");
       if (item) item.remove();
     });
   });
-   sec.querySelectorAll("#apex-gallery video").forEach(function (el) {
+   wrap.querySelectorAll("#apex-gallery video").forEach(function (el) {
      el.addEventListener("error", function () {
        var item = el.closest(".amg-item");
        if (item) item.remove();
      }, true);
    });
-   sec.querySelectorAll("#apex-gallery .amg-photo").forEach(function (item) {
+   wrap.querySelectorAll("#apex-gallery .amg-photo").forEach(function (item) {
      item.addEventListener("click", function () { openLightbox(item.getAttribute("data-full")); });
    });
-   sec.querySelectorAll("#apex-gallery .amg-vid-full").forEach(function (btn) {
+   wrap.querySelectorAll("#apex-gallery .amg-vid-full").forEach(function (btn) {
      btn.addEventListener("click", function (e) {
        e.stopPropagation();
        var vid = btn.previousElementSibling;
@@ -674,7 +696,7 @@
      });
    });
  
-   loadDynamicMedia(sec);
+   loadDynamicMedia(wrap);
  }
 
  /* ------------------------------------------------------------ dynamic media */
@@ -877,18 +899,35 @@
    );
  }
 
+ function fetchWithTimeout(url, ms) {
+   var controller = new AbortController();
+   var timer = setTimeout(function () { controller.abort(); }, ms);
+   return fetch(url, { signal: controller.signal }).finally(function () { clearTimeout(timer); });
+ }
+
  function loadApprovedReviews() {
    var grid = document.getElementById("apex-rev-grid");
    if (!grid) return;
 
-   var sitePromise = fetch("/.netlify/functions/list-reviews-public")
+   var sitePromise = fetchWithTimeout("/.netlify/functions/list-reviews-public", 7000)
      .then(function (r) { return r.json(); })
      .catch(function () { return []; });
-   var googlePromise = fetch("/.netlify/functions/google-reviews")
+   var googlePromise = fetchWithTimeout("/.netlify/functions/google-reviews", 7000)
      .then(function (r) { return r.json(); })
      .catch(function () { return { reviews: [] }; });
 
+   var settled = false;
+   var forceFallback = setTimeout(function () {
+     if (settled) return;
+     settled = true;
+     var g = document.getElementById("apex-rev-grid");
+     if (g) g.innerHTML = GOOGLE_SEED_REVIEWS.map(googleReviewCardHtml).join("");
+   }, 9000);
+
    Promise.all([sitePromise, googlePromise]).then(function (results) {
+     if (settled) return;
+     settled = true;
+     clearTimeout(forceFallback);
      var siteItems = (results[0] || []).filter(function (r) { return !r.static; });
      var googleData = results[1] || {};
      var googleItems = (googleData.reviews && googleData.reviews.length) ? googleData.reviews : GOOGLE_SEED_REVIEWS;
@@ -939,6 +978,9 @@
        countEl.textContent = "\u2605 " + avg + " \u00b7 " + total + " " + t("reviews");
      }
    }).catch(function () {
+     if (settled) return;
+     settled = true;
+     clearTimeout(forceFallback);
      if (grid) grid.innerHTML = '<div class="apex-rev-empty">' + esc(t("Reviews are unavailable right now.")) + "</div>";
    });
  }
@@ -1527,8 +1569,6 @@
         var el = document.getElementById(id);
         if (el) el.remove();
       });
-      var g = document.getElementById("galeria");
-      if (g) g.removeAttribute("data-apex-gallery");
       var note = document.querySelector("#apex-pkgs .price-note");
       if (note) note.remove();
     }

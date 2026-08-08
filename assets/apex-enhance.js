@@ -223,7 +223,7 @@
    "#apex-gallery .amg-item:hover{transform:translateY(-4px);border-color:#29b6f6;}",
    "#apex-gallery .amg-item video,#apex-gallery .amg-item img,#apex-gallery .amg-item iframe{width:100%;height:100%;object-fit:cover;display:block;background:#eef1f4;border:0;}",
    "#apex-gallery .amg-badge{position:absolute;top:8px;left:8px;background:rgba(10,17,32,.8);color:#fff;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:6px;pointer-events:none;}",
-   "#apex-pkgs .price-note{text-align:center;font-size:12px;color:#29b6f6;background:rgba(41,182,246,.06);border:1px solid rgba(41,182,246,.15);border-radius:8px;padding:9px 12px;max-width:640px;margin:-32px auto 40px;}",
+   "#apex-pkgs .price-note{text-align:center;font-size:12px;color:#29b6f6;background:rgba(41,182,246,.06);border:1px solid rgba(41,182,246,.15);border-radius:8px;padding:9px 12px;max-width:640px;margin:20px auto 40px;}",
    "#apex-gallery .amg-item.amg-photo{cursor:zoom-in;}",
    "#apex-gallery .amg-expand{position:absolute;top:8px;right:8px;background:rgba(10,17,32,.82);border:none;color:#fff;width:34px;height:34px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;z-index:2;transition:background .15s,transform .15s;}",
    "#apex-gallery .amg-item:hover .amg-expand{background:#29b6f6;}",
@@ -905,84 +905,75 @@
    return fetch(url, { signal: controller.signal }).finally(function () { clearTimeout(timer); });
  }
 
+ function renderReviewCards(grid, siteItems, googleData) {
+   googleData = googleData || {};
+   var googleItems = (googleData.reviews && googleData.reviews.length) ? googleData.reviews : GOOGLE_SEED_REVIEWS;
+   var cardsHtml = "";
+
+   if (googleData.overallRating && googleData.totalReviews) {
+     var fullStars = Math.round(googleData.overallRating);
+     var summaryStars = "";
+     for (var s = 1; s <= 5; s++) summaryStars += s <= fullStars ? "\u2605" : "\u2606";
+     cardsHtml +=
+       '<div class="apex-rev-google-summary">' +
+       '<span class="apex-rev-google-summary-score">' + googleData.overallRating + "</span>" +
+       '<span class="apex-rev-google-summary-stars">' + summaryStars + "</span>" +
+       '<span class="apex-rev-google-summary-count">(' + googleData.totalReviews + " Google reviews)</span>" +
+       (googleData.mapsUrl ? '<a href="' + googleData.mapsUrl + '" target="_blank" rel="noopener" class="apex-rev-google-summary-link">See all on Google</a>' : "") +
+       "</div>";
+   }
+
+   cardsHtml += googleItems.map(googleReviewCardHtml).join("");
+
+   cardsHtml += (siteItems || []).map(function (it) {
+     var starsStr = "";
+     for (var i = 1; i <= 5; i++) starsStr += i <= (it.calificacion || 0) ? "\u2605" : "\u2606";
+     var photo = it.foto ? '<img class="apex-rev-photo" src="' + it.foto + '" alt="" />' : "";
+     return (
+       '<div class="apex-rev-card">' +
+       '<div class="apex-rev-stars">' + starsStr + "</div>" +
+       '<div class="apex-rev-name">' + esc(it.nombre) + "</div>" +
+       '<div class="apex-rev-comment">' + esc(it.comentario) + "</div>" +
+       photo +
+       "</div>"
+     );
+   }).join("");
+
+   grid.innerHTML = cardsHtml || '<div class="apex-rev-empty">' + esc(t("Be the first to leave a review!")) + "</div>";
+
+   var countEl = document.getElementById("apex-rev-count");
+   if (countEl) {
+     var total = googleData.totalReviews ? googleData.totalReviews : (googleItems.length + (siteItems || []).length);
+     var avg = googleData.overallRating ? googleData.overallRating : 5;
+     countEl.textContent = "\u2605 " + avg + " \u00b7 " + total + " " + t("reviews");
+   }
+ }
+
  function loadApprovedReviews() {
    var grid = document.getElementById("apex-rev-grid");
    if (!grid) return;
 
-   var sitePromise = fetchWithTimeout("/.netlify/functions/list-reviews-public", 7000)
+   // Show real review content immediately — no network wait. GOOGLE_SEED_REVIEWS
+   // is already in memory, so there's no reason to make people stare at a
+   // "Loading..." placeholder while we wait on the network.
+   renderReviewCards(grid, [], {});
+
+   // Then quietly fetch site-submitted reviews and live Google data in the
+   // background and merge them in once available, without blocking display.
+   fetchWithTimeout("/.netlify/functions/list-reviews-public", 7000)
      .then(function (r) { return r.json(); })
-     .catch(function () { return []; });
-   var googlePromise = fetchWithTimeout("/.netlify/functions/google-reviews", 7000)
-     .then(function (r) { return r.json(); })
-     .catch(function () { return { reviews: [] }; });
-
-   var settled = false;
-   var forceFallback = setTimeout(function () {
-     if (settled) return;
-     settled = true;
-     var g = document.getElementById("apex-rev-grid");
-     if (g) g.innerHTML = GOOGLE_SEED_REVIEWS.map(googleReviewCardHtml).join("");
-   }, 9000);
-
-   Promise.all([sitePromise, googlePromise]).then(function (results) {
-     if (settled) return;
-     settled = true;
-     clearTimeout(forceFallback);
-     var siteItems = (results[0] || []).filter(function (r) { return !r.static; });
-     var googleData = results[1] || {};
-     var googleItems = (googleData.reviews && googleData.reviews.length) ? googleData.reviews : GOOGLE_SEED_REVIEWS;
-
-     if (!document.getElementById("apex-rev-grid")) return;
-
-     var cardsHtml = "";
-
-     if (googleData.overallRating && googleData.totalReviews) {
-       var fullStars = Math.round(googleData.overallRating);
-       var summaryStars = "";
-       for (var s = 1; s <= 5; s++) summaryStars += s <= fullStars ? "\u2605" : "\u2606";
-       cardsHtml +=
-         '<div class="apex-rev-google-summary">' +
-         '<span class="apex-rev-google-summary-score">' + googleData.overallRating + "</span>" +
-         '<span class="apex-rev-google-summary-stars">' + summaryStars + "</span>" +
-         '<span class="apex-rev-google-summary-count">(' + googleData.totalReviews + " Google reviews)</span>" +
-         (googleData.mapsUrl ? '<a href="' + googleData.mapsUrl + '" target="_blank" rel="noopener" class="apex-rev-google-summary-link">See all on Google</a>' : "") +
-         "</div>";
-     }
-
-     cardsHtml += googleItems.map(googleReviewCardHtml).join("");
-
-     cardsHtml += siteItems.map(function (it) {
-       var starsStr = "";
-       for (var i = 1; i <= 5; i++) starsStr += i <= (it.calificacion || 0) ? "\u2605" : "\u2606";
-       var photo = it.foto ? '<img class="apex-rev-photo" src="' + it.foto + '" alt="" />' : "";
-       return (
-         '<div class="apex-rev-card">' +
-         '<div class="apex-rev-stars">' + starsStr + "</div>" +
-         '<div class="apex-rev-name">' + esc(it.nombre) + "</div>" +
-         '<div class="apex-rev-comment">' + esc(it.comentario) + "</div>" +
-         photo +
-         "</div>"
-       );
-     }).join("");
-
-     if (!cardsHtml) {
-       grid.innerHTML = '<div class="apex-rev-empty">' + esc(t("Be the first to leave a review!")) + "</div>";
-       return;
-     }
-     grid.innerHTML = cardsHtml;
-
-     var countEl = document.getElementById("apex-rev-count");
-     if (countEl) {
-       var total = (googleData.totalReviews) ? googleData.totalReviews : (googleItems.length + siteItems.length);
-       var avg = googleData.overallRating ? googleData.overallRating : 5;
-       countEl.textContent = "\u2605 " + avg + " \u00b7 " + total + " " + t("reviews");
-     }
-   }).catch(function () {
-     if (settled) return;
-     settled = true;
-     clearTimeout(forceFallback);
-     if (grid) grid.innerHTML = '<div class="apex-rev-empty">' + esc(t("Reviews are unavailable right now.")) + "</div>";
-   });
+     .catch(function () { return []; })
+     .then(function (siteResult) {
+       var siteItems = (siteResult || []).filter(function (r) { return !r.static; });
+       fetchWithTimeout("/.netlify/functions/google-reviews", 7000)
+         .then(function (r) { return r.json(); })
+         .catch(function () { return {}; })
+         .then(function (googleData) {
+           var g = document.getElementById("apex-rev-grid");
+           if (!g) return;
+           renderReviewCards(g, siteItems, googleData || {});
+         });
+     });
  }
 
  function compressReviewImage(file, maxDim, quality) {

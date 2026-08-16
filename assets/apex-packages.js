@@ -31,6 +31,10 @@
   var ES = {
     "Book Now": "Reservar",
     "Starting at": "Desde",
+    "estimated": "estimado",
+    "Sedan / Coupe": "Sedán / Cupé",
+    "SUV / Minivan": "SUV / Minivan",
+    "Truck / Large SUV": "Camioneta / SUV grande",
     "Our": "Nuestros",
     "Packages": "Paquetes",
     "Choose the package that fits your vehicle's needs.": "Elige el paquete que se ajuste a las necesidades de tu vehículo.",
@@ -264,9 +268,12 @@
     "#apex-pkgs .service-list { list-style: none; display: flex; flex-direction: column; gap: 6px; flex: 1; }",
     "#apex-pkgs .service-item { font-size: 12.5px; color: #3f4750; line-height: 1.4; padding-left: 15px; position: relative; }",
     "#apex-pkgs .service-item::before { content: '\\2713'; position: absolute; left: 0; top: 0; color: #29b6f6; font-weight: 700; }",
-    "#apex-pkgs .pkg-total-row { display: flex; justify-content: space-between; align-items: baseline; padding-top: 10px; border-top: 1px solid #e2e7eb; }",
-    "#apex-pkgs .total-label { font-size: 12px; color: #667079; }",
-    "#apex-pkgs .total-amount { font-size: 1.5rem; font-weight: 700; color: #29b6f6; }",
+    "#apex-pkgs .pkg-duration { font-size: 13px; color: #29b6f6; font-weight: 600; }",
+    "#apex-pkgs .pkg-size-table { display: flex; flex-direction: column; gap: 4px; padding-top: 10px; border-top: 1px solid #e2e7eb; }",
+    "#apex-pkgs .pkg-size-row { display: flex; justify-content: space-between; align-items: baseline; }",
+    "#apex-pkgs .pkg-size-label { font-size: 13px; color: #667079; }",
+    "#apex-pkgs .pkg-size-amount { font-size: 1.15rem; font-weight: 700; color: #29b6f6; }",
+    "#apex-pkgs .pkg-size-row:first-child .pkg-size-amount { font-size: 1.5rem; }",
     "#apex-pkgs .card-disclaimer { font-size: 10px; color: #838c94; line-height: 1.5; }",
     "#apex-pkgs .btn-reserve { display: block; text-align: center; padding: 11px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; cursor: pointer; border: none; transition: opacity .15s; font-family: inherit; }",
     "#apex-pkgs .btn-solid { background: #29b6f6; color: #fff; }",
@@ -289,6 +296,25 @@
     });
   }
 
+  var HOURLY_RATE = 100;
+  var SIZE_TIERS = [
+    { key: "sedan", label: "Sedan / Coupe", addon: 0 },
+    { key: "suv", label: "SUV / Minivan", addon: 30 },
+    { key: "truck", label: "Truck / Large SUV", addon: 60 },
+  ];
+
+  function formatDuration(price) {
+    var hoursRaw = price / HOURLY_RATE;
+    var halfSteps = Math.round(hoursRaw * 2);
+    var hours = Math.floor(halfSteps / 2);
+    var half = halfSteps % 2 === 1;
+    var out = "";
+    if (hours > 0) out += hours + "h";
+    if (half) out += (out ? " " : "") + "30min";
+    if (!out) out = "30min";
+    return out;
+  }
+
   function cardHTML(pkg) {
     return (
       '<div class="pkg-card" id="card-' + pkg.id + '" data-pkg="' + pkg.id + '" data-price="' + pkg.price + '">' +
@@ -296,13 +322,20 @@
       '<div class="pkg-body">' +
       '<p class="pkg-name">' + esc(t(pkg.name)) + "</p>" +
       (pkg.subtitle ? '<p class="pkg-subtitle">' + esc(t(pkg.subtitle)) + "</p>" : "") +
+      '<p class="pkg-duration">\u23F1 ~' + formatDuration(pkg.price) + " " + t("estimated") + "</p>" +
       '<ul class="service-list">' +
       pkg.includes.map(function (s) {
         return '<li class="service-item">' + esc(t(s)) + "</li>";
       }).join("") +
       "</ul>" +
-      '<div class="pkg-total-row"><span class="total-label">' + t("Starting at") + '</span>' +
-      '<span class="total-amount">$' + pkg.price + "</span></div>" +
+      '<div class="pkg-size-table">' +
+      SIZE_TIERS.map(function (tier) {
+        return (
+          '<div class="pkg-size-row"><span class="pkg-size-label">' + t(tier.label) + '</span>' +
+          '<span class="pkg-size-amount">$' + (pkg.price + tier.addon) + "</span></div>"
+        );
+      }).join("") +
+      "</div>" +
       '<p class="card-disclaimer">* ' + esc(t(DISCLAIMER)) + "</p>" +
       '<button type="button" class="btn-reserve btn-solid" data-book="' + esc(pkg.name) + '">' + t("Book Now") + "</button>" +
       "</div></div>"

@@ -51,11 +51,6 @@
    "Preferred time": "Hora preferida",
    "Vehicle photos": "Fotos del vehículo",
    "reviews": "reseñas",
-   "Install the Apex Detailing app": "Instala la app de Apex Detailing",
-   "Tap the Share button, then \"Add to Home Screen\".": "Toca el botón Compartir y luego \"Agregar a pantalla de inicio\".",
-   "Book faster next time — add it to your home screen.": "Reserva más rápido la próxima vez — agrégala a tu pantalla de inicio.",
-   "Install": "Instalar",
-   "Close": "Cerrar",
    "optional, but helps us quote faster": "opcional, pero nos ayuda a cotizar más rápido",
    "Tap to upload": "Toca para subir",
    "or drag your photos here": "o arrastra tus fotos aquí",
@@ -351,15 +346,6 @@
 ".apex-rf-msg{margin-top:12px;font-size:14px;min-height:18px;}",
 ".apex-rf-msg.err{color:#d64545;}",
 ".apex-rf-msg.ok{color:#1ea672;}",
-"#apex-pwa-banner{position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;background:#101826;border:1px solid rgba(255,255,255,.12);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.4);animation:apexPwaSlideUp .3s ease-out;}",
-"@keyframes apexPwaSlideUp{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}",
-"#apex-pwa-banner .apex-pwa-inner{display:flex;align-items:center;gap:12px;padding:12px 14px;}",
-"#apex-pwa-banner .apex-pwa-icon{width:40px;height:40px;border-radius:10px;flex-shrink:0;}",
-"#apex-pwa-banner .apex-pwa-text{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;}",
-"#apex-pwa-banner .apex-pwa-text strong{color:#fff;font-size:14px;}",
-"#apex-pwa-banner .apex-pwa-text span{color:#a7b0bc;font-size:12.5px;line-height:1.3;}",
-"#apex-pwa-banner .apex-pwa-install-btn{background:#29b6f6;color:#0a0a0e;border:none;padding:9px 16px;border-radius:999px;font-weight:700;font-size:13px;cursor:pointer;flex-shrink:0;}",
-"#apex-pwa-banner .apex-pwa-close{background:none;border:none;color:#8a94a3;font-size:20px;line-height:1;cursor:pointer;padding:4px 6px;flex-shrink:0;}",
 ].join("\n");
 
  function ensureStyle() {
@@ -1588,78 +1574,4 @@
  } else {
    apply();
  }
-
- /* ------------------------------------------------------------------ PWA install */
- if ("serviceWorker" in navigator) {
-   window.addEventListener("load", function () {
-     navigator.serviceWorker.register("/sw.js").catch(function () {});
-   });
- }
-
- (function () {
-   var isStandalone =
-     window.matchMedia("(display-mode: standalone)").matches ||
-     window.navigator.standalone === true;
-   if (isStandalone) return; // already installed, no need to prompt
-
-   var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
-   var dismissedKey = "apex_pwa_dismissed";
-   if (sessionStorage.getItem(dismissedKey)) return;
-
-   var deferredPrompt = null;
-   var banner = null;
-
-   function buildBanner(onInstallClick, isIOSFlow) {
-     var el = document.createElement("div");
-     el.id = "apex-pwa-banner";
-     el.innerHTML =
-       '<div class="apex-pwa-inner">' +
-       '<img src="/icons/icon-96.png" alt="" class="apex-pwa-icon" />' +
-       '<div class="apex-pwa-text">' +
-       "<strong>" + t("Install the Apex Detailing app") + "</strong>" +
-       "<span>" + (isIOSFlow
-         ? t("Tap the Share button, then \"Add to Home Screen\".")
-         : t("Book faster next time — add it to your home screen.")) +
-       "</span>" +
-       "</div>" +
-       (isIOSFlow ? "" : '<button type="button" class="apex-pwa-install-btn">' + t("Install") + "</button>") +
-       '<button type="button" class="apex-pwa-close" aria-label="' + esc(t("Close")) + '">&times;</button>' +
-       "</div>";
-     document.body.appendChild(el);
-
-     el.querySelector(".apex-pwa-close").addEventListener("click", function () {
-       el.remove();
-       sessionStorage.setItem(dismissedKey, "1");
-     });
-     if (!isIOSFlow) {
-       el.querySelector(".apex-pwa-install-btn").addEventListener("click", function () {
-         if (!deferredPrompt) return;
-         deferredPrompt.prompt();
-         deferredPrompt.userChoice.finally(function () {
-           deferredPrompt = null;
-           el.remove();
-         });
-       });
-     }
-     return el;
-   }
-
-   if (isIOS) {
-     // iOS Safari has no install prompt API — show static instructions after a short delay.
-     setTimeout(function () {
-       if (!document.getElementById("apex-pwa-banner")) banner = buildBanner(null, true);
-     }, 4000);
-   } else {
-     window.addEventListener("beforeinstallprompt", function (e) {
-       e.preventDefault();
-       deferredPrompt = e;
-       if (!document.getElementById("apex-pwa-banner")) banner = buildBanner(true, false);
-     });
-   }
-
-   window.addEventListener("appinstalled", function () {
-     var el = document.getElementById("apex-pwa-banner");
-     if (el) el.remove();
-   });
- })();
 })();
